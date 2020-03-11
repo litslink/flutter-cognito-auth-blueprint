@@ -19,7 +19,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) async* {
     if (event is SignUpButtonPressed) {
       yield SignUpLoading();
-      authenticationBloc.add(SignedIn());
+      authenticationBloc
+          .add(SignUp(email: event.username, password: event.password));
     }
 
     if (event is SignInButtonPressed) {

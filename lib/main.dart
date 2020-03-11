@@ -2,13 +2,15 @@ import 'package:bloc/bloc.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterapp/sign_up/sign_up_page.dart';
-
 import 'authentication/authentication_bloc.dart';
 import 'authentication/authentication_event.dart';
 import 'authentication/authentication_state.dart';
 import 'base.dart';
+import 'data/repository/authentication_repository.dart';
+
 import 'sign_in/sign_in_page.dart';
+import 'sign_up/sign_up_page.dart';
+
 import 'widgets/loading_indicator.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
@@ -33,9 +35,10 @@ class SimpleBlocDelegate extends BlocDelegate {
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
+  final authenticationRepository = AuthenticationRepository();
   runApp(BlocProvider<AuthenticationBloc>(
       create: (context) {
-        return AuthenticationBloc()..add(AppLaunched());
+        return AuthenticationBloc(authenticationRepository)..add(AppLaunched());
       },
       child: CognitoApp()));
 }
@@ -58,7 +61,7 @@ class CognitoApp extends StatelessWidget {
           if (state is AuthenticationLoading) {
             return LoadingIndicator();
           }
-          return LoadingIndicator();
+          return null;
         },
       ),
     );

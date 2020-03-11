@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterapp/authentication/authentication_state.dart';
 import '../authentication/authentication_bloc.dart';
 import '../authentication/authentication_event.dart';
 import 'sign_in_event.dart';
@@ -20,7 +19,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   ) async* {
     if (event is SignInButtonPressed) {
       yield SignInLoading();
-      authenticationBloc.add(SignedIn());
+      authenticationBloc
+          .add(SignIn(email: event.username, password: event.password));
     }
 
     if (event is SignUpButtonPressed) {

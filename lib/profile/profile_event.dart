@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 abstract class ProfileEvent extends Equatable {
   const ProfileEvent();
@@ -17,11 +16,9 @@ class PicChanged extends ProfileEvent {}
 class UpdateButtonPressed extends ProfileEvent {
   final String firstName;
   final String lastName;
+  final String picUrl;
 
-  const UpdateButtonPressed({
-    @required this.firstName,
-    @required this.lastName,
-  });
+  const UpdateButtonPressed({this.firstName, this.lastName, this.picUrl});
 
   @override
   List<Object> get props => [firstName, lastName];

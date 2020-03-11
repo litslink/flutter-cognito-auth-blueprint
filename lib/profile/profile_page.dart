@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../data/repository/user_repository.dart';
 import 'profile_bloc.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
@@ -12,16 +13,17 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final ProfileBloc _profileBloc = ProfileBloc();
+  String _picUrl;
+  final ProfileBloc _profileBloc = ProfileBloc(UserRepository());
 
   @override
   Widget build(BuildContext context) {
     _onUpdateButtonPressed() {
       _profileBloc.add(
         UpdateButtonPressed(
-          firstName: _firstNameController.text,
-          lastName: _lastNameController.text,
-        ),
+            firstName: _firstNameController.text,
+            lastName: _lastNameController.text,
+            picUrl: _picUrl),
       );
     }
 

@@ -10,18 +10,21 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInForm extends State<SignInForm> {
-  final _loginController = TextEditingController();
+  final _signInKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     _onSignInButtonPressed() {
-      BlocProvider.of<SignInBloc>(context).add(
-        SignInButtonPressed(
-          username: _loginController.text,
-          password: _passwordController.text,
-        ),
-      );
+      if (_signInKey.currentState.validate()) {
+        BlocProvider.of<SignInBloc>(context).add(
+          SignInButtonPressed(
+            username: _emailController.text,
+            password: _passwordController.text,
+          ),
+        );
+      }
     }
 
     _onSignUpButtonPressed() {
@@ -44,17 +47,24 @@ class _SignInForm extends State<SignInForm> {
       child: BlocBuilder<SignInBloc, SignInState>(
         builder: (context, state) {
           return Form(
+            key: _signInKey,
             child: Column(
               children: [
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'login'),
-                  controller: _loginController,
-                ),
+                    decoration: InputDecoration(labelText: 'email'),
+                    maxLines: 1,
+                    controller: _emailController,
+                    validator: (value) =>
+                        value.isEmpty ? "Enter your email!" : null,
+                    keyboardType: TextInputType.emailAddress),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'password'),
-                  controller: _passwordController,
-                  obscureText: true,
-                ),
+                    decoration: InputDecoration(labelText: 'password'),
+                    controller: _passwordController,
+                    obscureText: true,
+                    validator: (value) => value.length < 8
+                        ? "Password length can\'t be lower than 8 characters"
+                        : null,
+                    maxLines: 1),
                 RaisedButton(
                   onPressed:
                       state is! SignInLoading ? _onSignInButtonPressed : null,
