@@ -2,16 +2,13 @@ import 'package:bloc/bloc.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'authentication/authentication_bloc.dart';
-import 'authentication/authentication_event.dart';
-import 'authentication/authentication_state.dart';
+import 'package:provider/provider.dart';
 import 'base.dart';
-import 'data/repository/authentication_repository.dart';
 
 import 'sign_in/sign_in_page.dart';
 import 'sign_up/sign_up_page.dart';
-
-import 'widgets/loading_indicator.dart';
+import 'splash/splash_page.dart';
+import 'package:flutterapp/provider.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
@@ -35,35 +32,22 @@ class SimpleBlocDelegate extends BlocDelegate {
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
-  final authenticationRepository = AuthenticationRepository();
-  runApp(BlocProvider<AuthenticationBloc>(
-      create: (context) {
-        return AuthenticationBloc(authenticationRepository)..add(AppLaunched());
-      },
-      child: CognitoApp()));
+  runApp(CognitoApp());
 }
 
 class CognitoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state) {
-          if (state is AuthenticationAuthenticated) {
-            return BasePage();
-          }
-          if (state is AuthenticationUnauthenticated) {
-            return SignInPage();
-          }
-          if (state is AuthenticationSignUpNeeded) {
-            return SignUpPage();
-          }
-          if (state is AuthenticationLoading) {
-            return LoadingIndicator();
-          }
-          return null;
-        },
-      ),
-    );
+    return MultiProvider(
+        providers: providers,
+        child: MaterialApp(
+          initialRoute: SplashPage.route,
+          routes: {
+            SplashPage.route: (context) => SplashPage(),
+            SignInPage.route: (context) => SignInPage(),
+            SignUpPage.route: (context) => SignUpPage(),
+            BasePage.route: (context) => BasePage()
+          },
+        ));
   }
 }

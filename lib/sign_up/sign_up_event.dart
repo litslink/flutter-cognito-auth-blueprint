@@ -7,16 +7,16 @@ abstract class SignUpEvent extends Equatable {
 }
 
 class SignUpButtonPressed extends SignUpEvent {
-  final String username;
+  final String email;
   final String password;
 
   const SignUpButtonPressed({
-    @required this.username,
+    @required this.email,
     @required this.password,
   });
 
   @override
-  List<Object> get props => [username, password];
+  List<Object> get props => [email, password];
 
   @override
   String toString() => 'SignUn button pressed';

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../base.dart';
+import '../sign_up/sign_up_page.dart';
+import '../widgets/loading_indicator.dart';
 import 'sign_in_bloc.dart';
 import 'sign_in_event.dart';
 import 'sign_in_state.dart';
@@ -20,7 +23,7 @@ class _SignInForm extends State<SignInForm> {
       if (_signInKey.currentState.validate()) {
         BlocProvider.of<SignInBloc>(context).add(
           SignInButtonPressed(
-            username: _emailController.text,
+            email: _emailController.text,
             password: _passwordController.text,
           ),
         );
@@ -33,9 +36,13 @@ class _SignInForm extends State<SignInForm> {
       );
     }
 
-    return BlocListener<SignInBloc, SignInState>(
+    return BlocListener<SignInBloc, LoginState>(
       listener: (context, state) {
-        if (state is SignInFailure) {
+        if (state is SignInMovingToSignUp) {
+          Navigator.of(context).popAndPushNamed(SignUpPage.route);
+        } else if (state is SignInSuccess) {
+          Navigator.of(context).pushReplacementNamed(BasePage.route);
+        } else if (state is SignInFailure) {
           Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text('${state.toString()}'),
@@ -44,7 +51,7 @@ class _SignInForm extends State<SignInForm> {
           );
         }
       },
-      child: BlocBuilder<SignInBloc, SignInState>(
+      child: BlocBuilder<SignInBloc, LoginState>(
         builder: (context, state) {
           return Form(
             key: _signInKey,
@@ -66,19 +73,14 @@ class _SignInForm extends State<SignInForm> {
                         : null,
                     maxLines: 1),
                 RaisedButton(
-                  onPressed:
-                      state is! SignInLoading ? _onSignInButtonPressed : null,
+                  onPressed: _onSignInButtonPressed,
                   child: Text('Sign in'),
                 ),
                 Container(
-                  child: state is SignInLoading
-                      ? CircularProgressIndicator()
-                      : null,
+                  child: state is SignInLoading ? LoadingIndicator() : null,
                 ),
                 FlatButton(
-                    onPressed:
-                        state is! SignInLoading ? _onSignUpButtonPressed : null,
-                    child: Text('Sign up'))
+                    onPressed: _onSignUpButtonPressed, child: Text('Sign up'))
               ],
             ),
           );

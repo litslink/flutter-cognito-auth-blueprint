@@ -6,8 +6,9 @@ class UserRepository {
     return await Cognito.getUserAttributes();
   }
 
-  Future<void> updateUserInfo(
+  Future<List<UserCodeDeliveryDetails>> updateUserInfo(
       {@required Map<String, String> userAttributes}) async {
-    await Cognito.updateUserAttributes(userAttributes);
+    var res = await Cognito.updateUserAttributes(userAttributes);
+    return res;
   }
 }

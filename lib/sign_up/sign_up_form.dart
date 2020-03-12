@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterapp/base.dart';
+import 'package:flutterapp/sign_in/sign_in_page.dart';
+import 'package:flutterapp/widgets/loading_indicator.dart';
 import 'sign_up_bloc.dart';
 import 'sign_up_event.dart';
 import 'sign_up_state.dart';
@@ -20,7 +23,7 @@ class _SignUpForm extends State<SignUpForm> {
       if (_signUpKey.currentState.validate()) {
         BlocProvider.of<SignUpBloc>(context).add(
           SignUpButtonPressed(
-            username: _emailController.text,
+            email: _emailController.text,
             password: _passwordController.text,
           ),
         );
@@ -35,7 +38,11 @@ class _SignUpForm extends State<SignUpForm> {
 
     return BlocListener<SignUpBloc, SignUpState>(
       listener: (context, state) {
-        if (state is SignUpFailure) {
+        if (state is SignUpMovingToSignIn) {
+          Navigator.of(context).popAndPushNamed(SignInPage.route);
+        } else if (state is SignUpSuccess) {
+          Navigator.of(context).popAndPushNamed(BasePage.route);
+        } else if (state is SignUpFailure) {
           Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text('${state.toString()}'),
@@ -68,19 +75,14 @@ class _SignUpForm extends State<SignUpForm> {
                   maxLines: 1,
                 ),
                 RaisedButton(
-                  onPressed:
-                      state is! SignUpLoading ? _onSignUpButtonPressed : null,
+                  onPressed: _onSignUpButtonPressed,
                   child: Text('Sign up'),
                 ),
                 Container(
-                  child: state is SignUpLoading
-                      ? CircularProgressIndicator()
-                      : null,
+                  child: state is SignUpLoading ? LoadingIndicator() : null,
                 ),
                 FlatButton(
-                    onPressed:
-                        state is! SignUpLoading ? _onSignInButtonPressed : null,
-                    child: Text('Sign in'))
+                    onPressed: _onSignInButtonPressed, child: Text('Sign in'))
               ],
             ),
           );

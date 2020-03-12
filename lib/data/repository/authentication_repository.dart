@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cognito_plugin/flutter_cognito_plugin.dart';
 
 class AuthenticationRepository {
-  Future<void> initCognito() async {
-    await Cognito.initialize();
+  Future<UserState> initCognito() async {
+    var res = await Cognito.initialize();
+    return res;
   }
 
-  Future<void> signIn(
+  Future<SignInResult> signIn(
       {@required String email, @required String password}) async {
-    await Cognito.signIn(email, password);
+    var res = await Cognito.signIn(email, password);
+    return res;
   }
 
-  Future<void> signUp(
+  Future<SignUpResult> signUp(
       {@required String email, @required String password}) async {
     var attrs = {'email': '$email'};
-    await Cognito.signUp(email, password, attrs);
+    var res = await Cognito.signUp(email, password, attrs);
+    return res;
   }
 
   Future<void> signOut() async {

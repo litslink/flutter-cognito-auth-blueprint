@@ -15,7 +15,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if (event is UpdateButtonPressed) {
       yield EditingLoading();
-      _userRepository.updateUserInfo(userAttributes: null);
+      await _userRepository.updateUserInfo(userAttributes: null);
     }
   }
 }

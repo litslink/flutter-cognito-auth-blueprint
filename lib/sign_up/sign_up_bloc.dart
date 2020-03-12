@@ -1,17 +1,16 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
-import '../authentication/authentication_bloc.dart';
-import '../authentication/authentication_event.dart';
+import 'package:flutter_cognito_plugin/models.dart';
+import '../data/repository/authentication_repository.dart';
 import 'sign_up_event.dart';
 import 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  final AuthenticationBloc authenticationBloc;
+  final AuthenticationRepository _authenticationRepository;
 
-  SignUpBloc({@required this.authenticationBloc});
+  SignUpBloc(this._authenticationRepository);
 
   @override
-  SignUpState get initialState => SignUpFailure();
+  SignUpState get initialState => SignUpRequired();
 
   @override
   Stream<SignUpState> mapEventToState(
@@ -19,12 +18,23 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) async* {
     if (event is SignUpButtonPressed) {
       yield SignUpLoading();
-      authenticationBloc
-          .add(SignUp(email: event.username, password: event.password));
+      SignUpResult user;
+      try {
+        user = await _authenticationRepository.signUp(
+            email: event.email, password: event.password);
+      } on Exception catch (error) {
+        yield SignUpFailure(error: error.toString());
+      }
+
+      if (user != null) {
+        yield SignUpSuccess();
+      } else {
+        yield SignUpFailure();
+      }
     }
 
     if (event is SignInButtonPressed) {
-      authenticationBloc.add(MoveToSignIn());
+      yield SignUpMovingToSignIn();
     }
   }
 }

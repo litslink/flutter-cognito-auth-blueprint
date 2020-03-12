@@ -9,6 +9,20 @@ abstract class SignUpState extends Equatable {
 
 class SignUpLoading extends SignUpState {}
 
-class SignUpFailure extends SignUpState {}
+class SignUpRequired extends SignUpState {}
+
+class SignUpFailure extends SignUpState {
+  final String error;
+
+  const SignUpFailure({this.error});
+
+  @override
+  List<Object> get props => [error];
+
+  @override
+  String toString() => 'SignUpFailure { error: $error }';
+}
 
 class SignUpSuccess extends SignUpState {}
+
+class SignUpMovingToSignIn extends SignUpState {}

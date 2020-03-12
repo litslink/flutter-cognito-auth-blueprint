@@ -4,6 +4,8 @@ import 'notifications/notification_page.dart';
 import 'profile/profile_page.dart';
 
 class BasePage extends StatefulWidget {
+  static final String route = '/base';
+
   @override
   State<StatefulWidget> createState() => _BasePageState();
 }

@@ -1,16 +1,28 @@
 import 'package:equatable/equatable.dart';
 
-abstract class SignInState extends Equatable {
-  const SignInState();
+abstract class LoginState extends Equatable {
+  const LoginState();
 
   @override
   List<Object> get props => null;
 }
 
-class SignInLoading extends SignInState {}
+class SignInLoading extends LoginState {}
 
-class SignInFailure extends SignInState {}
+class SignInRequired extends LoginState {}
 
-class SignInSuccess extends SignInState {}
+class SignInFailure extends LoginState {
+  final String error;
 
-class SignInMovingToSignUp extends SignInState {}
+  const SignInFailure({this.error});
+
+  @override
+  List<Object> get props => [error];
+
+  @override
+  String toString() => 'SignInFailure { error: $error }';
+}
+
+class SignInSuccess extends LoginState {}
+
+class SignInMovingToSignUp extends LoginState {}
