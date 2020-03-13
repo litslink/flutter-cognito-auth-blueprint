@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'base.dart';
-
+import 'provider.dart';
 import 'sign_in/sign_in_page.dart';
 import 'sign_up/sign_up_page.dart';
 import 'splash/splash_page.dart';
-import 'package:flutterapp/provider.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override

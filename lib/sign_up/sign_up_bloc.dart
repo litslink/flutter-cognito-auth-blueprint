@@ -18,18 +18,34 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) async* {
     if (event is SignUpButtonPressed) {
       yield SignUpLoading();
-      SignUpResult user;
+      SignUpResult res;
       try {
-        user = await _authenticationRepository.signUp(
+        res = await _authenticationRepository.signUp(
             email: event.email, password: event.password);
       } on Exception catch (error) {
         yield SignUpFailure(error: error.toString());
       }
 
-      if (user != null) {
+      if (res != null && res.confirmationState) {
         yield SignUpSuccess();
-      } else {
-        yield SignUpFailure();
+      } else if (res != null && !res.confirmationState) {
+        yield SignUpConfirmation();
+      }
+    }
+
+    if (event is ConfirmSignUpPressed) {
+      yield SignUpLoading();
+      SignUpResult res;
+      try {
+        res = await _authenticationRepository.confirmSignUp(
+            username: event.username, code: event.code);
+      } on Exception catch (error) {
+        yield SignUpFailure(error: error.toString());
+      }
+      if (res != null && res.confirmationState) {
+        yield SignUpSuccess();
+      } else if (res != null && !res.confirmationState) {
+        yield SignUpConfirmation();
       }
     }
 

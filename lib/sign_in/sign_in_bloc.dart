@@ -26,7 +26,7 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
         yield SignInFailure(error: error.toString());
       }
 
-      if (user != null && user.signInState == "SignInState.DONE") {
+      if (user != null && user.signInState.toString() == "SignInState.DONE") {
         yield SignInSuccess();
       } else {
         yield SignInFailure();

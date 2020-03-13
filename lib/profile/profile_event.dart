@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 abstract class ProfileEvent extends Equatable {
   const ProfileEvent();
@@ -7,11 +9,19 @@ abstract class ProfileEvent extends Equatable {
   List<Object> get props => null;
 }
 
-class FirstNameChanged extends ProfileEvent {}
+class LoadUser extends ProfileEvent {
+  final String firstName;
+  final String lastName;
+  final String picUrl;
 
-class LastNameChanged extends ProfileEvent {}
+  const LoadUser({this.firstName, this.lastName, this.picUrl});
 
-class PicChanged extends ProfileEvent {}
+  @override
+  List<Object> get props => [firstName, lastName];
+
+  @override
+  String toString() => 'loading user';
+}
 
 class UpdateButtonPressed extends ProfileEvent {
   final String firstName;
@@ -28,9 +38,15 @@ class UpdateButtonPressed extends ProfileEvent {
 }
 
 class PicPressed extends ProfileEvent {
+  final ImageSource imageSource;
+
+  const PicPressed({@required this.imageSource});
+
   @override
-  List<Object> get props => null;
+  List<ImageSource> get props => [imageSource];
 
   @override
   String toString() => 'pic pressed';
 }
+
+class SignOutUser extends ProfileEvent {}

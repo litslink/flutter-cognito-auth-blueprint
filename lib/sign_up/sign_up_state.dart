@@ -25,4 +25,6 @@ class SignUpFailure extends SignUpState {
 
 class SignUpSuccess extends SignUpState {}
 
+class SignUpConfirmation extends SignUpState {}
+
 class SignUpMovingToSignIn extends SignUpState {}
