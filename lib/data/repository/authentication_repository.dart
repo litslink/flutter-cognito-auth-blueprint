@@ -26,6 +26,19 @@ class AuthenticationRepository {
     return await Cognito.confirmSignUp(username, code);
   }
 
+  Future<ForgotPasswordResult> resetPassword(
+      {@required String username}) async {
+    return await Cognito.forgotPassword(username);
+  }
+
+  Future<ForgotPasswordResult> confirmPasswordReset(
+      {@required String username,
+      @required String newPassword,
+      @required String confirmationCode}) async {
+    return await Cognito.confirmForgotPassword(
+        username, newPassword, confirmationCode);
+  }
+
   Future<void> signOut() async {
     await Cognito.signOut();
   }

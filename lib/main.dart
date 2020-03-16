@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterapp/profile/edit/edit_page.dart';
 import 'package:provider/provider.dart';
 import 'base.dart';
 import 'provider.dart';
@@ -45,7 +46,8 @@ class CognitoApp extends StatelessWidget {
             SplashPage.route: (context) => SplashPage(),
             SignInPage.route: (context) => SignInPage(),
             SignUpPage.route: (context) => SignUpPage(),
-            BasePage.route: (context) => BasePage()
+            BasePage.route: (context) => BasePage(),
+            EditPage.route: (context) => EditPage()
           },
         ));
   }

@@ -16,25 +16,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if (event is LoadUser) {
-      var attrs = await _userRepository.getUserInfo();
-      if (attrs != null) {
-        yield UserLoaded();
+      var user = await _userRepository.getUserInfo();
+      if (user != null) {
+        yield UserLoaded(user: user);
       }
-    }
-    if (event is PicPressed) {
-      var image = await _userRepository.getImage(source: event.imageSource);
-      if (image != null) {
-        yield PicturePicked(image: image);
-      }
-    }
-    if (event is UpdateButtonPressed) {
-      yield EditingLoading();
-      var attrs = {
-        'name': event.firstName,
-        'family name': event.lastName,
-        'picture': event.picUrl
-      };
-      await _userRepository.updateUserInfo(userAttributes: attrs);
     }
 
     if (event is SignOutUser) {

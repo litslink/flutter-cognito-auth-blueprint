@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import '../data/model/user.dart';
 
 abstract class ProfileState extends Equatable {
   const ProfileState();
@@ -10,33 +8,27 @@ abstract class ProfileState extends Equatable {
   List<Object> get props => null;
 }
 
-class UserLoaded extends ProfileState {}
+class UserLoaded extends ProfileState {
+  final User user;
+
+  const UserLoaded({this.user});
+
+  @override
+  List<Object> get props => [user];
+}
 
 class LoadingUser extends ProfileState {}
 
-class Edited extends ProfileState {}
-
-class PicturePicked extends ProfileState {
-  final File image;
-
-  const PicturePicked({@required this.image});
-
-  @override
-  List<File> get props => [image];
-}
-
-class EditingFailure extends ProfileState {
+class UserLoadingFailure extends ProfileState {
   final String error;
 
-  const EditingFailure({this.error});
+  const UserLoadingFailure({this.error});
 
   @override
   List<Object> get props => [error];
 
   @override
-  String toString() => 'EditingFailure { error: $error }';
+  String toString() => 'UserEditingFailure { error: $error }';
 }
-
-class EditingLoading extends ProfileState {}
 
 class SignedOut extends ProfileState {}

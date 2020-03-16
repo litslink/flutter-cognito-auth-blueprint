@@ -36,5 +36,22 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
     if (event is SignUpButtonPressed) {
       yield SignInMovingToSignUp();
     }
+
+    if (event is ResetButtonPressed) {
+      yield ResetPassword();
+    }
+
+    if (event is GetConfirmationCodePressed) {
+      yield ConfirmationCode();
+      await _authenticationRepository.resetPassword(username: event.username);
+    }
+    if (event is ConfirmResetButtonPressed) {
+      yield ResetLoading();
+      await _authenticationRepository.confirmPasswordReset(
+          username: event.username,
+          newPassword: event.newPassword,
+          confirmationCode: event.code);
+      yield SignInRequired();
+    }
   }
 }

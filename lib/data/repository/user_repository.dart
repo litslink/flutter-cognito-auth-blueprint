@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_cognito_plugin/flutter_cognito_plugin.dart';
 import 'package:image_picker/image_picker.dart';
+import '../model/user.dart';
 
 class UserRepository {
-  Future<Map<String, String>> getUserInfo() async {
-    return await Cognito.getUserAttributes();
+  Future<User> getUserInfo() async {
+    var attrs =  await Cognito.getUserAttributes();
+    return User.fromMap(attrs);
   }
 
   Future<List<UserCodeDeliveryDetails>> updateUserInfo(

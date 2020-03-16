@@ -26,3 +26,20 @@ class SignInFailure extends LoginState {
 class SignInSuccess extends LoginState {}
 
 class SignInMovingToSignUp extends LoginState {}
+
+class ResetPassword extends LoginState {}
+
+class ConfirmationCode extends LoginState{}
+
+class ResetLoading extends LoginState {}
+
+class ResetFailure extends LoginState {
+  final String error;
+  const ResetFailure({this.error});
+
+  @override
+  List<Object> get props => [error];
+
+  @override
+  String toString() => 'ResetFailure { error: $error }';
+}
