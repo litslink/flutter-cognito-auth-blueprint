@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import '../../data/model/user.dart';
 
 abstract class EditState extends Equatable {
   const EditState();
@@ -10,7 +11,14 @@ abstract class EditState extends Equatable {
   List<Object> get props => null;
 }
 
-class UserLoaded extends EditState {}
+class UserLoaded extends EditState {
+  final User user;
+
+  const UserLoaded({@required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
 
 class LoadingUser extends EditState {}
 

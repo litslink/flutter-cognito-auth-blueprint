@@ -11,6 +11,7 @@ import 'edit_state.dart';
 
 class EditPage extends StatefulWidget {
   static final String route = '/edit';
+
   @override
   State<EditPage> createState() => _EditPageState();
 }
@@ -25,14 +26,6 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     final userRepository = Provider.of<UserRepository>(context);
     _editBloc = EditBloc(userRepository)..add(LoadUser());
-    _onUpdateButtonPressed() {
-      _editBloc.add(
-        UpdateButtonPressed(
-            firstName: _firstNameController.text,
-            lastName: _lastNameController.text,
-            picUrl: _picUrl),
-      );
-    }
 
     return BlocListener<EditBloc, EditState>(
       bloc: _editBloc,
@@ -50,61 +43,72 @@ class _EditPageState extends State<EditPage> {
         bloc: _editBloc,
         builder: (context, state) {
           if (state is PicturePicked) {
-            _picUrl = state.image.uri.toString();
+            _picUrl = state.image.path;
           }
-          return Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: AppBar(title: Text("Profile")),
-              body: SingleChildScrollView(
-                  child: Column(
-                children: <Widget>[
-                  Center(
-                      child: InkWell(
-                    onTap: _buildImagePickerDialog,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 20.0),
-                      width: 140.0,
-                      height: 140.0,
-                      child: CircleAvatar(
-                          backgroundColor: Colors.amber,
-                          radius: 25.0,
-                          backgroundImage: state is PicturePicked
-                              ? FileImage(state.image)
-                              : null,
-                          child: state is! PicturePicked
-                              ? Icon(
-                                  Icons.camera_alt,
-                                  color: Colors.white,
-                                )
-                              : null),
-                    ),
-                  )),
-                  Form(
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'first name'),
-                          controller: _firstNameController,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'last name'),
-                          controller: _lastNameController,
-                        ),
-                        RaisedButton(
-                          onPressed: _onUpdateButtonPressed,
-                          child: Text('Update'),
-                        ),
-                        Container(
-                          child:
-                              state is EditLoading ? LoadingIndicator() : null,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              )));
+          return _buildScreen(state);
         },
       ),
+    );
+  }
+
+  Widget _buildScreen(EditState state) {
+    if (state is UserLoaded) {
+      _firstNameController.text = state.user.name;
+      _lastNameController.text = state.user.familyName;
+    }
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(title: Text("Profile")),
+        body: SingleChildScrollView(
+            child: Column(
+          children: <Widget>[
+            Center(
+                child: InkWell(
+              onTap: _buildImagePickerDialog,
+              child: Container(
+                margin: EdgeInsets.only(top: 20.0),
+                width: 100.0,
+                height: 100.0,
+                child: CircleAvatar(
+                    backgroundColor: Colors.amber,
+                    radius: 25.0,
+                    backgroundImage: _buildAvatar(state),
+                    child: state is! PicturePicked
+                        ? Icon(Icons.camera_alt, color: Colors.white)
+                        : null),
+              ),
+            )),
+            Form(
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'first name'),
+                    controller: _firstNameController,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'last name'),
+                    controller: _lastNameController,
+                  ),
+                  RaisedButton(
+                    onPressed: _onUpdateButtonPressed,
+                    child: Text('Update'),
+                  ),
+                  Container(
+                    child: state is EditLoading ? LoadingIndicator() : null,
+                  ),
+                ],
+              ),
+            )
+          ],
+        )));
+  }
+
+  void _onUpdateButtonPressed() {
+    _editBloc.add(
+      UpdateButtonPressed(
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+          picUrl: _picUrl),
     );
   }
 
@@ -113,6 +117,15 @@ class _EditPageState extends State<EditPage> {
     _editBloc.add(
       PicPressed(imageSource: imageSource),
     );
+  }
+
+  ImageProvider _buildAvatar(EditState state) {
+    if (state is PicturePicked) {
+      return FileImage(state.image);
+    } else if (state is UserLoaded) {
+      return NetworkImage(state.user.picture);
+    }
+    return NetworkImage("");
   }
 
   Future<void> _buildImagePickerDialog() async {

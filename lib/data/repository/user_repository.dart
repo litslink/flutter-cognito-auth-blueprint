@@ -7,7 +7,7 @@ import '../model/user.dart';
 
 class UserRepository {
   Future<User> getUserInfo() async {
-    var attrs =  await Cognito.getUserAttributes();
+    final attrs =  await Cognito.getUserAttributes();
     return User.fromMap(attrs);
   }
 

@@ -26,11 +26,21 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
         yield SignInFailure(error: error.toString());
       }
 
-      if (user != null && user.signInState.toString() == "SignInState.DONE") {
+      if (user != null && user.signInState == SignInState.DONE) {
         yield SignInSuccess();
       } else {
         yield SignInFailure();
       }
+    }
+
+    if (event is SignInWithGooglePressed) {
+      yield SignInWithGoogle();
+      final userState = await _authenticationRepository.signInWithGoogle();
+    }
+
+    if (event is SignInWithFacebookPressed) {
+      yield SignInWithFacebook();
+      await _authenticationRepository.signInWithFacebook();
     }
 
     if (event is SignUpButtonPressed) {

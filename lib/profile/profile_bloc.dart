@@ -16,7 +16,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if (event is LoadUser) {
-      var user = await _userRepository.getUserInfo();
+      final user = await _userRepository.getUserInfo();
       if (user != null) {
         yield UserLoaded(user: user);
       }

@@ -46,6 +46,22 @@ class GetConfirmationCodePressed extends SignInEvent {
   String toString() => 'getting confirmation code password';
 }
 
+class SignInWithGooglePressed extends SignInEvent {
+  @override
+  List<Object> get props => null;
+
+  @override
+  String toString() => 'signing in with google';
+}
+
+class SignInWithFacebookPressed extends SignInEvent {
+  @override
+  List<Object> get props => null;
+
+  @override
+  String toString() => 'signing in with facebook';
+}
+
 class ConfirmResetButtonPressed extends SignInEvent {
   final String username;
   final String newPassword;

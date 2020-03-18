@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import '../data/model/user.dart';
 
 abstract class ProfileState extends Equatable {
@@ -11,7 +12,7 @@ abstract class ProfileState extends Equatable {
 class UserLoaded extends ProfileState {
   final User user;
 
-  const UserLoaded({this.user});
+  const UserLoaded({@required this.user});
 
   @override
   List<Object> get props => [user];

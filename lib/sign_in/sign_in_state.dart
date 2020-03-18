@@ -27,6 +27,10 @@ class SignInSuccess extends LoginState {}
 
 class SignInMovingToSignUp extends LoginState {}
 
+class SignInWithGoogle extends LoginState {}
+
+class SignInWithFacebook extends LoginState {}
+
 class ResetPassword extends LoginState {}
 
 class ConfirmationCode extends LoginState{}

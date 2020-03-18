@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cognito_plugin/flutter_cognito_plugin.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthenticationRepository {
+  final GoogleSignIn googleSignIn;
+
+  AuthenticationRepository(this.googleSignIn);
+
   Future<UserState> initCognito() async {
     return await Cognito.initialize();
   }
@@ -15,9 +20,17 @@ class AuthenticationRepository {
     return await Cognito.signIn(email, password);
   }
 
+  Future<UserState> signInWithGoogle() async {
+    final user = await googleSignIn.signIn();
+    final auth = await user.authentication;
+    return await Cognito.federatedSignIn("google", auth.idToken);
+  }
+
+  Future<void> signInWithFacebook() async {}
+
   Future<SignUpResult> signUp(
       {@required String email, @required String password}) async {
-    var attrs = {'email': '$email'};
+    final attrs = {'email': '$email'};
     return await Cognito.signUp(email, password, attrs);
   }
 
