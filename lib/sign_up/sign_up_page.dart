@@ -27,8 +27,8 @@ class SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     _signUpBloc = SignUpBloc(Provider.of<AuthenticationRepository>(context));
 
-    return Material(
-        child: BlocProvider(
+    return Scaffold(
+        body: BlocProvider(
             create: (context) {
               return _signUpBloc;
             },
@@ -42,12 +42,9 @@ class SignUpPageState extends State<SignUpPage> {
                     } else if (state is SignUpSuccess) {
                       Navigator.of(context).popAndPushNamed(SignInPage.route);
                     } else if (state is SignUpFailure) {
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${state.toString()}'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Oops...something went wrong'),
+                          backgroundColor: Colors.red));
                     }
                   },
                   child: BlocBuilder<SignUpBloc, SignUpState>(

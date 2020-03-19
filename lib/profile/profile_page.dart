@@ -26,16 +26,14 @@ class _ProfilePageState extends State<ProfilePage> {
     _profileBloc = ProfileBloc(userRepository, authenticationRepository)
       ..add(LoadUser());
 
-    return BlocListener<ProfileBloc, ProfileState>(
+    return Scaffold(
+        body: BlocListener<ProfileBloc, ProfileState>(
       bloc: _profileBloc,
       listener: (context, state) {
         if (state is UserLoadingFailure) {
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${state.toString()}'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Oops...something went wrong'),
+              backgroundColor: Colors.red));
         }
         if (state is SignedOut) {
           Navigator.pushReplacementNamed(context, SignInPage.route);
@@ -45,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
         bloc: _profileBloc,
         builder: (context, state) => _buildProfile(state),
       ),
-    );
+    ));
   }
 
   Widget _buildProfile(ProfileState state) {

@@ -27,16 +27,14 @@ class _EditPageState extends State<EditPage> {
     final userRepository = Provider.of<UserRepository>(context);
     _editBloc = EditBloc(userRepository)..add(LoadUser());
 
-    return BlocListener<EditBloc, EditState>(
+    return Scaffold(
+        body: BlocListener<EditBloc, EditState>(
       bloc: _editBloc,
       listener: (context, state) {
         if (state is EditFailure) {
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${state.toString()}'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Oops...something went wrong'),
+              backgroundColor: Colors.red));
         }
       },
       child: BlocBuilder<EditBloc, EditState>(
@@ -48,7 +46,7 @@ class _EditPageState extends State<EditPage> {
           return _buildScreen(state);
         },
       ),
-    );
+    ));
   }
 
   Widget _buildScreen(EditState state) {
