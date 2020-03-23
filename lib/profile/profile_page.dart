@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import '../auth/sign_in/sign_in_page.dart';
 import '../data/repository/authentication_repository.dart';
 import '../data/repository/user_repository.dart';
-import '../sign_in/sign_in_page.dart';
 import '../widgets/loading_indicator.dart';
 import 'edit/edit_page.dart';
 import 'profile_bloc.dart';

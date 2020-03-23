@@ -9,7 +9,16 @@ abstract class SignUpState extends Equatable {
 
 class SignUpLoading extends SignUpState {}
 
-class SignUpRequired extends SignUpState {}
+class ConfirmationLoading extends SignUpState {}
+
+class SignUpRequired extends SignUpState {
+  final bool isEmailValid;
+  final bool isPasswordValid;
+
+  SignUpRequired({this.isEmailValid, this.isPasswordValid});
+}
+
+class FieldChanged extends SignUpState {}
 
 class SignUpFailure extends SignUpState {
   final String error;
@@ -25,6 +34,10 @@ class SignUpFailure extends SignUpState {
 
 class SignUpSuccess extends SignUpState {}
 
-class SignUpConfirmation extends SignUpState {}
+class SignUpConfirmation extends SignUpState {
+  final bool isCodeValid;
+
+  SignUpConfirmation({this.isCodeValid});
+}
 
 class SignUpMovingToSignIn extends SignUpState {}

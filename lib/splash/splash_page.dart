@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import '../base.dart';
 import '../data/repository/authentication_repository.dart';
-import '../sign_in/sign_in_page.dart';
+import '../auth/sign_in/sign_in_page.dart';
 
 import 'splash_bloc.dart';
 import 'splash_event.dart';

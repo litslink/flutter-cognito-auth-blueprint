@@ -9,7 +9,14 @@ abstract class LoginState extends Equatable {
 
 class SignInLoading extends LoginState {}
 
-class SignInRequired extends LoginState {}
+class SignInRequired extends LoginState {
+  final bool isEmailValid;
+  final bool isPasswordValid;
+
+  SignInRequired({this.isEmailValid, this.isPasswordValid});
+}
+
+class FieldChanged extends LoginState {}
 
 class SignInFailure extends LoginState {
   final String error;
@@ -33,12 +40,13 @@ class SignInWithFacebook extends LoginState {}
 
 class ResetPassword extends LoginState {}
 
-class ConfirmationCode extends LoginState{}
+class ConfirmationCode extends LoginState {}
 
 class ResetLoading extends LoginState {}
 
 class ResetFailure extends LoginState {
   final String error;
+
   const ResetFailure({this.error});
 
   @override
