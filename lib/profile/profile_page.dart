@@ -17,6 +17,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   ProfileBloc _profileBloc;
+  bool _isNotificationOn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 20.0),
+                margin: const EdgeInsets.only(top: 20.0),
                 width: 100.0,
                 height: 100.0,
                 child: CircleAvatar(
@@ -91,6 +92,27 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text(
                 state is UserLoaded ? state.user.familyName : "last name",
                 style: TextStyle(fontSize: 18),
+              ),
+            ),
+            Divider(height: 1.0, color: Colors.blue),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Notifications',
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                  Switch(
+                    value: _isNotificationOn,
+                    onChanged: (value) {
+                      setState(() {
+                        _isNotificationOn = value;
+                      });
+                    },
+                  ),
+                ],
               ),
             ),
             Divider(height: 1.0, color: Colors.blue),

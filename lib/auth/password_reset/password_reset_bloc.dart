@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import '../../data/repository/authentication_repository.dart';
-import '../../util/validation/validation_bloc.dart';
-import '../../util/validation/validation_state.dart';
-import '../../util/validation/validator.dart';
+import '../../validation/validation_bloc.dart';
+import '../../validation/validation_state.dart';
+import '../../validation/validator.dart';
 import 'password_reset_event.dart';
 import 'password_reset_state.dart';
 

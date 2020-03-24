@@ -20,7 +20,16 @@ class UserLoaded extends EditState {
   List<Object> get props => [user];
 }
 
+class EditRequired extends EditState {
+  final bool isFirstNameValid;
+  final bool isLastNameValid;
+
+  const EditRequired({this.isFirstNameValid, this.isLastNameValid});
+}
+
 class LoadingUser extends EditState {}
+
+class FieldChanged extends EditState {}
 
 class Edited extends EditState {}
 

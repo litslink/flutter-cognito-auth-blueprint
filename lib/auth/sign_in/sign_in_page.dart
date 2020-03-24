@@ -149,9 +149,6 @@ class SignInPageState extends State<SignInPage> {
           onPressed: () =>
               Navigator.of(context).pushNamed(PasswordResetPage.route),
           child: Text('Reset password')),
-      Container(
-        child: state is SignInLoading ? LoadingIndicator() : null,
-      )
     ]);
   }
 }

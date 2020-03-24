@@ -24,14 +24,12 @@ class LoadUser extends EditEvent {
 }
 
 class UpdateButtonPressed extends EditEvent {
-  final String firstName;
-  final String lastName;
   final String picUrl;
 
-  const UpdateButtonPressed({this.firstName, this.lastName, this.picUrl});
+  const UpdateButtonPressed({this.picUrl});
 
   @override
-  List<Object> get props => [firstName, lastName];
+  List<Object> get props => null;
 
   @override
   String toString() => 'update button pressed';
@@ -50,3 +48,27 @@ class PicPressed extends EditEvent {
 }
 
 class SignOutUser extends EditEvent {}
+
+class FirstNameChanged extends EditEvent {
+  final String firstName;
+
+  FirstNameChanged(this.firstName);
+
+  @override
+  List<Object> get props => null;
+
+  @override
+  String toString() => 'first name changed';
+}
+
+class LastNameChanged extends EditEvent {
+  final String lastName;
+
+  LastNameChanged(this.lastName);
+
+  @override
+  List<Object> get props => null;
+
+  @override
+  String toString() => 'last name changed';
+}

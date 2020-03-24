@@ -23,6 +23,13 @@ class _EditPageState extends State<EditPage> {
   EditBloc _editBloc;
 
   @override
+  void dispose() {
+    super.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userRepository = Provider.of<UserRepository>(context);
     _editBloc = EditBloc(userRepository)..add(LoadUser());
@@ -43,13 +50,19 @@ class _EditPageState extends State<EditPage> {
           if (state is PicturePicked) {
             _picUrl = state.image.path;
           }
-          return _buildScreen(state);
+          if (state is EditRequired) {
+            return _buildScreen(
+                state, state.isFirstNameValid, state.isLastNameValid);
+          } else {
+            return _buildScreen(state, true, true);
+          }
         },
       ),
     ));
   }
 
-  Widget _buildScreen(EditState state) {
+  Widget _buildScreen(
+      EditState state, bool isFirstNameValid, bool isLastNameValid) {
     if (state is UserLoaded) {
       _firstNameController.text = state.user.name;
       _lastNameController.text = state.user.familyName;
@@ -80,15 +93,29 @@ class _EditPageState extends State<EditPage> {
               child: Column(
                 children: [
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'first name'),
+                    decoration: InputDecoration(
+                        labelText: 'first name',
+                        errorText:
+                            isFirstNameValid ? null : 'field must not be emty'),
+                    onChanged: (value) {
+                      _editBloc.add(FirstNameChanged(value));
+                    },
                     controller: _firstNameController,
                   ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'last name'),
+                    decoration: InputDecoration(
+                        labelText: 'last name',
+                        errorText:
+                            isLastNameValid ? null : 'field must not be emty'),
+                    onChanged: (value) {
+                      _editBloc.add(LastNameChanged(value));
+                    },
                     controller: _lastNameController,
                   ),
                   RaisedButton(
-                    onPressed: _onUpdateButtonPressed,
+                    onPressed: () => _editBloc.add(
+                      UpdateButtonPressed(picUrl: _picUrl),
+                    ),
                     child: Text('Update'),
                   ),
                   Container(
@@ -99,15 +126,6 @@ class _EditPageState extends State<EditPage> {
             )
           ],
         )));
-  }
-
-  void _onUpdateButtonPressed() {
-    _editBloc.add(
-      UpdateButtonPressed(
-          firstName: _firstNameController.text,
-          lastName: _lastNameController.text,
-          picUrl: _picUrl),
-    );
   }
 
   void _onPicPressed(ImageSource imageSource) {
