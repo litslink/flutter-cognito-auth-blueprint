@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +21,7 @@ class EditPage extends StatefulWidget {
 class _EditPageState extends State<EditPage> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  String _picUrl;
+  File _imgFile;
   EditBloc _editBloc;
 
   @override
@@ -48,7 +50,7 @@ class _EditPageState extends State<EditPage> {
         bloc: _editBloc,
         builder: (context, state) {
           if (state is PicturePicked) {
-            _picUrl = state.image.path;
+            _imgFile = state.image;
           }
           if (state is EditRequired) {
             return _buildScreen(
@@ -63,10 +65,6 @@ class _EditPageState extends State<EditPage> {
 
   Widget _buildScreen(
       EditState state, bool isFirstNameValid, bool isLastNameValid) {
-    if (state is UserLoaded) {
-      _firstNameController.text = state.user.name;
-      _lastNameController.text = state.user.familyName;
-    }
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(title: Text("Profile")),
@@ -84,46 +82,45 @@ class _EditPageState extends State<EditPage> {
                     backgroundColor: Colors.amber,
                     radius: 25.0,
                     backgroundImage: _buildAvatar(state),
-                    child: state is! PicturePicked
+                    child: _imgFile == null
                         ? Icon(Icons.camera_alt, color: Colors.white)
                         : null),
               ),
             )),
-            Form(
-              child: Column(
-                children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'first name',
-                        errorText:
-                            isFirstNameValid ? null : 'field must not be emty'),
-                    onChanged: (value) {
-                      _editBloc.add(FirstNameChanged(value));
-                    },
-                    controller: _firstNameController,
+            Column(
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                      labelText: 'first name',
+                      errorText:
+                          isFirstNameValid ? null : 'field must not be emty'),
+                  onChanged: (value) {
+                    _editBloc.add(FirstNameChanged(value));
+                  },
+                  controller: _firstNameController,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      labelText: 'last name',
+                      errorText:
+                          isLastNameValid ? null : 'field must not be emty'),
+                  onChanged: (value) {
+                    _editBloc.add(LastNameChanged(value));
+                  },
+                  controller: _lastNameController,
+                ),
+                RaisedButton(
+                  onPressed: () => _editBloc.add(
+                    UpdateButtonPressed(
+                        picUrl: _imgFile != null ? _imgFile.path : ""),
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'last name',
-                        errorText:
-                            isLastNameValid ? null : 'field must not be emty'),
-                    onChanged: (value) {
-                      _editBloc.add(LastNameChanged(value));
-                    },
-                    controller: _lastNameController,
-                  ),
-                  RaisedButton(
-                    onPressed: () => _editBloc.add(
-                      UpdateButtonPressed(picUrl: _picUrl),
-                    ),
-                    child: Text('Update'),
-                  ),
-                  Container(
-                    child: state is EditLoading ? LoadingIndicator() : null,
-                  ),
-                ],
-              ),
-            )
+                  child: Text('Update'),
+                ),
+                Container(
+                  child: state is EditLoading ? LoadingIndicator() : null,
+                ),
+              ],
+            ),
           ],
         )));
   }
@@ -138,6 +135,8 @@ class _EditPageState extends State<EditPage> {
   ImageProvider _buildAvatar(EditState state) {
     if (state is PicturePicked) {
       return FileImage(state.image);
+    } else if (_imgFile != null) {
+      return FileImage(_imgFile);
     } else if (state is UserLoaded) {
       return NetworkImage(state.user.picture);
     }

@@ -41,7 +41,7 @@ class EditBloc extends Bloc<EditEvent, EditState> {
           if (event.picUrl != null) {
             imageUrl = await AmazonS3Cognito.uploadImage(
                 event.picUrl,
-                "flutter-cognito-blueprint-bucket",
+                "flutter-cognito-blueprint-us-east-1",
                 "eu-west-2:89d2b2b8-2787-4a42-b1b4-f4453bbaa376");
           }
           final attrs = {
