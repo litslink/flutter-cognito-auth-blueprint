@@ -47,7 +47,17 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
 
     if (event is SignInWithGooglePressed) {
       yield SignInWithGoogle();
-      final userState = await _authenticationRepository.signInWithGoogle();
+      try {
+        final userState = await _authenticationRepository.signInWithGoogle();
+        if (userState != null && userState == UserState.SIGNED_IN) {
+          yield SignInSuccess();
+        } else {
+          yield SignInRequired(isEmailValid: true, isPasswordValid: true);
+        }
+      } on Exception catch (error) {
+        yield SignInFailure(error: error.toString());
+        yield SignInRequired(isEmailValid: true, isPasswordValid: true);
+      }
     }
 
     if (event is SignInWithFacebookPressed) {

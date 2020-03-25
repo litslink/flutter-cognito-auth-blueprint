@@ -23,7 +23,7 @@ class AuthenticationRepository {
   Future<UserState> signInWithGoogle() async {
     final user = await googleSignIn.signIn();
     final auth = await user.authentication;
-    return await Cognito.federatedSignIn("google", auth.idToken);
+    return await Cognito.federatedSignIn("accounts.google.com", auth.idToken);
   }
 
   Future<void> signInWithFacebook() async {}

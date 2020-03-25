@@ -64,8 +64,9 @@ class SignUpPageState extends State<SignUpPage> {
                     return _buildConfirmationForm(state, true);
                   } else if (state is SignUpSuccess) {
                     return _buildConfirmationForm(state, true);
+                  } else if (state is SignUpMovingToSignIn) {
+                    return _buildSignUpForm(state, true, true);
                   }
-                  ;
                 },
               ),
             )));
