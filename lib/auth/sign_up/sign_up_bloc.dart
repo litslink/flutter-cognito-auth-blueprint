@@ -47,7 +47,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
       }
     }
-
     if (event is ConfirmSignUpPressed) {
       yield ConfirmationLoading();
       SignUpResult res;
@@ -69,23 +68,19 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
       }
     }
-
     if (event is SignInButtonPressed) {
       yield SignUpMovingToSignIn();
     }
-
     if (event is EmailChanged) {
       yield FieldChanged();
       _email.add(event.email);
       yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
     }
-
     if (event is PasswordChanged) {
       yield FieldChanged();
       _password.add(event.password);
       yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
     }
-
     if (event is ConfirmationCodeChanged) {
       yield FieldChanged();
       _code.add(event.code);

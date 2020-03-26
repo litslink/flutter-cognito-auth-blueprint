@@ -32,7 +32,6 @@ class SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext c) {
     _signInBloc = SignInBloc(Provider.of<AuthenticationRepository>(context));
-
     return Scaffold(
         body: Container(
             margin: EdgeInsets.only(top: 20.0),
@@ -145,10 +144,11 @@ class SignInPageState extends State<SignInPage> {
           )
         ],
       ),
-      FlatButton(
-          onPressed: () =>
-              Navigator.of(context).pushNamed(PasswordResetPage.route),
-          child: Text('Reset password')),
+      GestureDetector(
+        onTap: () => Navigator.of(context).pushNamed(PasswordResetPage.route),
+        child: Text('Reset password',
+            style: TextStyle(fontSize: 16, color: Colors.blueAccent)),
+      ),
     ]);
   }
 }

@@ -9,4 +9,3 @@ class FieldValid extends ValidationState {
 
   FieldValid(this.text);
 }
-

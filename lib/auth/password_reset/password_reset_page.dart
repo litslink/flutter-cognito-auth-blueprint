@@ -58,8 +58,7 @@ class PasswordResetPageState extends State<PasswordResetPage> {
               } else if (state is GettingConfirmationCode) {
                 return _buildResetForm(context, true);
               } else if (state is ResetLoading) {
-                return _buildConfirmationForm(
-                    context, true, true);
+                return _buildConfirmationForm(context, true, true);
               }
             },
           ),

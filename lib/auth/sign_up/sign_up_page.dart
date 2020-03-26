@@ -32,7 +32,6 @@ class SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     _signUpBloc = SignUpBloc(Provider.of<AuthenticationRepository>(context));
-
     return Scaffold(
         body: Container(
             margin: EdgeInsets.only(top: 20.0),

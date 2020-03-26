@@ -26,7 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final userRepository = Provider.of<UserRepository>(context);
     _profileBloc = ProfileBloc(userRepository, authenticationRepository)
       ..add(LoadUser());
-
     return Scaffold(
         body: BlocListener<ProfileBloc, ProfileState>(
       bloc: _profileBloc,

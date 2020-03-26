@@ -44,7 +44,6 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
         yield SignInRequired(isEmailValid: true, isPasswordValid: true);
       }
     }
-
     if (event is SignInWithGooglePressed) {
       yield SignInWithGoogle();
       try {
@@ -59,26 +58,21 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
         yield SignInRequired(isEmailValid: true, isPasswordValid: true);
       }
     }
-
     if (event is SignInWithFacebookPressed) {
       yield SignInWithFacebook();
       await _authenticationRepository.signInWithFacebook();
     }
-
     if (event is SignUpButtonPressed) {
       yield SignInMovingToSignUp();
     }
-
     if (event is ResetButtonPressed) {
       yield ResetPassword();
     }
-
     if (event is EmailChanged) {
       yield FieldChanged();
       _email.add(event.email);
       yield SignInRequired(isEmailValid: true, isPasswordValid: true);
     }
-
     if (event is PasswordChanged) {
       yield FieldChanged();
       _password.add(event.password);

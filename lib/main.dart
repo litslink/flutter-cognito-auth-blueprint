@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/auth/password_reset/password_reset_page.dart';
 import 'package:provider/provider.dart';
-
 import 'base.dart';
 import 'profile/edit/edit_page.dart';
 import 'provider.dart';

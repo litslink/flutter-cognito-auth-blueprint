@@ -61,13 +61,11 @@ class EditBloc extends Bloc<EditEvent, EditState> {
         yield EditRequired(isFirstNameValid: true, isLastNameValid: true);
       }
     }
-
     if (event is FirstNameChanged) {
       yield FieldChanged();
       _firstName.add(event.firstName);
       yield EditRequired(isFirstNameValid: true, isLastNameValid: true);
     }
-
     if (event is LastNameChanged) {
       yield FieldChanged();
       _lastName.add(event.lastName);

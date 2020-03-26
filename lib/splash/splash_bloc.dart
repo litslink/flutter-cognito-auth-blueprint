@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_cognito_plugin/flutter_cognito_plugin.dart';
 import '../data/repository/authentication_repository.dart';
-
 import 'splash_event.dart';
 import 'splash_state.dart';
 

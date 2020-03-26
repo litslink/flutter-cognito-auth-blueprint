@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../data/repository/user_repository.dart';
 import '../../widgets/loading_indicator.dart';
-
 import 'edit_bloc.dart';
 import 'edit_event.dart';
 import 'edit_state.dart';
@@ -35,7 +33,6 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     final userRepository = Provider.of<UserRepository>(context);
     _editBloc = EditBloc(userRepository)..add(LoadUser());
-
     return Scaffold(
         body: BlocListener<EditBloc, EditState>(
       bloc: _editBloc,

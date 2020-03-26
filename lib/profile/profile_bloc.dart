@@ -21,7 +21,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield UserLoaded(user: user);
       }
     }
-
     if (event is SignOutUser) {
       await _authenticationRepository.signOut();
       yield SignedOut();

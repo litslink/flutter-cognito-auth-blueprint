@@ -37,7 +37,6 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
         yield ResetRequired(isEmailValid: true);
       }
     }
-
     if (event is ConfirmResetButtonPressed) {
       yield ResetLoading();
       try {
@@ -57,19 +56,16 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
         yield ConfirmReset(isPasswordValid: true, isCodeValid: true);
       }
     }
-
     if (event is EmailChanged) {
       yield FieldChanged();
       _email.add(event.email);
       yield ResetRequired(isEmailValid: true);
     }
-
     if (event is PasswordChanged) {
       yield FieldChanged();
       _password.add(event.password);
       yield ConfirmReset(isPasswordValid: true, isCodeValid: true);
     }
-
     if (event is ConfirmationCodeChanged) {
       yield FieldChanged();
       _code.add(event.code);
