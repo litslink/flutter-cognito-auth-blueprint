@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../../data/model/user.dart';
 import '../../data/repository/user_repository.dart';
 import '../../widgets/loading_indicator.dart';
 import 'edit_bloc.dart';
@@ -17,26 +18,25 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
   File _imgFile;
   EditBloc _editBloc;
-
-  @override
-  void dispose() {
-    super.dispose();
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-  }
+  final _editNameController = TextEditingController();
+  final _editLastNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final user = ModalRoute.of(context).settings.arguments as User;
+    _editNameController.text = user.name;
+    _editLastNameController.text = user.familyName;
     final userRepository = Provider.of<UserRepository>(context);
-    _editBloc = EditBloc(userRepository)..add(LoadUser());
+    _editBloc = EditBloc(userRepository);
     return Scaffold(
         body: BlocListener<EditBloc, EditState>(
       bloc: _editBloc,
       listener: (context, state) {
+        if (state is Edited) {
+          Navigator.pop(context);
+        }
         if (state is EditFailure) {
           Scaffold.of(context).showSnackBar(SnackBar(
               content: Text('Oops...something went wrong'),
@@ -51,9 +51,9 @@ class _EditPageState extends State<EditPage> {
           }
           if (state is EditRequired) {
             return _buildScreen(
-                state, state.isFirstNameValid, state.isLastNameValid);
+                state, user, state.isFirstNameValid, state.isLastNameValid);
           } else {
-            return _buildScreen(state, true, true);
+            return _buildScreen(state, user, true, true);
           }
         },
       ),
@@ -61,7 +61,7 @@ class _EditPageState extends State<EditPage> {
   }
 
   Widget _buildScreen(
-      EditState state, bool isFirstNameValid, bool isLastNameValid) {
+      EditState state, User user, bool isFirstNameValid, bool isLastNameValid) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(title: Text("Profile")),
@@ -78,8 +78,8 @@ class _EditPageState extends State<EditPage> {
                 child: CircleAvatar(
                     backgroundColor: Colors.amber,
                     radius: 25.0,
-                    backgroundImage: _buildAvatar(state),
-                    child: _imgFile == null
+                    backgroundImage: _buildAvatar(state, user),
+                    child: _imgFile == null && user.picture == null
                         ? Icon(Icons.camera_alt, color: Colors.white)
                         : null),
               ),
@@ -91,30 +91,35 @@ class _EditPageState extends State<EditPage> {
                       labelText: 'first name',
                       errorText:
                           isFirstNameValid ? null : 'field must not be emty'),
+                  controller: _editNameController,
                   onChanged: (value) {
-                    _editBloc.add(FirstNameChanged(value));
+                    _editBloc.add(FirstNameChanged(_editNameController.text));
                   },
-                  controller: _firstNameController,
                 ),
                 TextField(
                   decoration: InputDecoration(
                       labelText: 'last name',
                       errorText:
                           isLastNameValid ? null : 'field must not be emty'),
+                  controller: _editLastNameController,
                   onChanged: (value) {
                     _editBloc.add(LastNameChanged(value));
                   },
-                  controller: _lastNameController,
                 ),
                 RaisedButton(
-                  onPressed: () => _editBloc.add(
-                    UpdateButtonPressed(
-                        picUrl: _imgFile != null ? _imgFile.path : ""),
-                  ),
+                  onPressed: () {
+                    _editBloc.add(FirstNameChanged(_editNameController.text));
+                    _editBloc
+                        .add(LastNameChanged(_editLastNameController.text));
+                    _editBloc.add(
+                      UpdateButtonPressed(
+                          picUrl: _imgFile != null ? _imgFile.path : ""),
+                    );
+                  },
                   child: Text('Update'),
                 ),
                 Container(
-                  child: state is EditLoading ? LoadingIndicator() : null,
+                  child: state is Loading ? LoadingIndicator() : null,
                 ),
               ],
             ),
@@ -129,13 +134,13 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
-  ImageProvider _buildAvatar(EditState state) {
+  ImageProvider _buildAvatar(EditState state, User user) {
     if (state is PicturePicked) {
       return FileImage(state.image);
     } else if (_imgFile != null) {
       return FileImage(_imgFile);
-    } else if (state is UserLoaded) {
-      return NetworkImage(state.user.picture);
+    } else if (state is EditRequired) {
+      return NetworkImage(user.picture);
     }
     return NetworkImage("");
   }

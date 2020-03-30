@@ -2,6 +2,7 @@ include: package:effective_dart/analysis_options.yaml
 linter:
   rules:
     public_member_api_docs: false
+    lines_longer_than_80_chars: false
 analyzer:
   exclude: [build/**]
   strong-mode:

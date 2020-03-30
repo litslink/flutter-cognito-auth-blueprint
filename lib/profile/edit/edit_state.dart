@@ -20,13 +20,14 @@ class UserLoaded extends EditState {
 }
 
 class EditRequired extends EditState {
+  final User user;
   final bool isFirstNameValid;
   final bool isLastNameValid;
 
-  const EditRequired({this.isFirstNameValid, this.isLastNameValid});
+  const EditRequired({this.user, this.isFirstNameValid, this.isLastNameValid});
 }
 
-class LoadingUser extends EditState {}
+class Loading extends EditState {}
 
 class FieldChanged extends EditState {}
 
@@ -52,5 +53,3 @@ class EditFailure extends EditState {
   @override
   String toString() => 'EditingFailure { error: $error }';
 }
-
-class EditLoading extends EditState {}

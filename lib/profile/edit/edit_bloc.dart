@@ -16,14 +16,14 @@ class EditBloc extends Bloc<EditEvent, EditState> {
   final _lastName = ValidationBloc(NameValidator());
 
   @override
-  EditState get initialState => LoadingUser();
+  EditState get initialState =>
+      EditRequired(isFirstNameValid: true, isLastNameValid: true);
 
   @override
   Stream<EditState> mapEventToState(EditEvent event) async* {
     if (event is LoadUser) {
       final user = await _userRepository.getUserInfo();
       if (user != null) {
-        yield UserLoaded(user: user);
         yield EditRequired(isFirstNameValid: true, isLastNameValid: true);
       }
     }
@@ -34,11 +34,11 @@ class EditBloc extends Bloc<EditEvent, EditState> {
       }
     }
     if (event is UpdateButtonPressed) {
-      yield EditLoading();
+      yield Loading();
       try {
         if (_firstName.state is FieldValid && _lastName.state is FieldValid) {
           String imageUrl;
-          if (event.picUrl != null) {
+          if (event.picUrl.isNotEmpty) {
             imageUrl = await AmazonS3Cognito.uploadImage(
                 event.picUrl,
                 "flutter-cognito-blueprint-us-east-1",
@@ -47,8 +47,10 @@ class EditBloc extends Bloc<EditEvent, EditState> {
           final attrs = {
             'name': (_firstName.state as FieldValid).text,
             'family_name': (_lastName.state as FieldValid).text,
-            'picture': imageUrl == null ? "" : imageUrl
           };
+          if (imageUrl != null) {
+            attrs["picture"] = imageUrl;
+          }
           await _userRepository.updateUserInfo(userAttributes: attrs);
           yield Edited();
           yield EditRequired(isFirstNameValid: true, isLastNameValid: true);

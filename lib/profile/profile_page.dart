@@ -74,8 +74,10 @@ class _ProfilePageState extends State<ProfilePage> {
             Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: RaisedButton(
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(EditPage.route),
+                  onPressed: () => state is UserLoaded
+                      ? Navigator.of(context)
+                          .pushNamed(EditPage.route, arguments: state.user)
+                      : null,
                   child: Text('Edit'),
                 )),
             Padding(
