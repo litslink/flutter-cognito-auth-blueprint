@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home/home_page.dart';
+import 'notes/notes_page.dart';
 import 'notifications/notification_page.dart';
 import 'profile/profile_page.dart';
 

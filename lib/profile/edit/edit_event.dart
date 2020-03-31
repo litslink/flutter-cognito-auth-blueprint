@@ -9,20 +9,6 @@ abstract class EditEvent extends Equatable {
   List<Object> get props => null;
 }
 
-class LoadUser extends EditEvent {
-  final String firstName;
-  final String lastName;
-  final String picUrl;
-
-  const LoadUser({this.firstName, this.lastName, this.picUrl});
-
-  @override
-  List<Object> get props => [firstName, lastName];
-
-  @override
-  String toString() => 'loading user';
-}
-
 class UpdateButtonPressed extends EditEvent {
   final String picUrl;
 

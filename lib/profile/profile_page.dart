@@ -27,104 +27,102 @@ class _ProfilePageState extends State<ProfilePage> {
     _profileBloc = ProfileBloc(userRepository, authenticationRepository)
       ..add(LoadUser());
     return Scaffold(
+        appBar: AppBar(title: Text("Profile")),
         body: BlocListener<ProfileBloc, ProfileState>(
-      bloc: _profileBloc,
-      listener: (context, state) {
-        if (state is UserLoadingFailure) {
-          Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text('Oops...something went wrong'),
-              backgroundColor: Colors.red));
-        }
-        if (state is SignedOut) {
-          Navigator.pushReplacementNamed(context, SignInPage.route);
-        }
-      },
-      child: BlocBuilder<ProfileBloc, ProfileState>(
-        bloc: _profileBloc,
-        builder: (context, state) => _buildProfile(state),
-      ),
-    ));
+          bloc: _profileBloc,
+          listener: (context, state) {
+            if (state is UserLoadingFailure) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text('Oops...something went wrong'),
+                  backgroundColor: Colors.red));
+            }
+            if (state is SignedOut) {
+              Navigator.pushReplacementNamed(context, SignInPage.route);
+            }
+          },
+          child: BlocBuilder<ProfileBloc, ProfileState>(
+            bloc: _profileBloc,
+            builder: (context, state) => _buildProfile(state),
+          ),
+        ));
   }
 
   Widget _buildProfile(ProfileState state) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(title: Text("Profile")),
-        body: SingleChildScrollView(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 20.0),
-                width: 100.0,
-                height: 100.0,
-                child: CircleAvatar(
-                    backgroundColor: Colors.amber,
-                    radius: 25.0,
-                    backgroundImage: state is UserLoaded
-                        ? NetworkImage(state.user.picture)
-                        : null),
+    return SingleChildScrollView(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Center(
+          child: Container(
+            margin: const EdgeInsets.only(top: 20.0),
+            width: 100.0,
+            height: 100.0,
+            child: CircleAvatar(
+                backgroundColor: Colors.amber,
+                radius: 25.0,
+                backgroundImage: state is UserLoaded
+                    ? NetworkImage(state.user.picture)
+                    : null),
+          ),
+        ),
+        Container(
+          child: state is LoadingUser ? LoadingIndicator() : null,
+        ),
+        Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: RaisedButton(
+              onPressed: () => state is UserLoaded
+                  ? Navigator.of(context)
+                      .pushNamed(EditPage.route, arguments: state.user)
+                  : null,
+              child: Text('Edit'),
+            )),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            state is UserLoaded ? state.user.name : "first name",
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+        Divider(height: 1.0, color: Colors.blue),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            state is UserLoaded ? state.user.familyName : "last name",
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+        Divider(height: 1.0, color: Colors.blue),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Notifications',
+                style: TextStyle(fontSize: 16, color: Colors.black),
               ),
-            ),
-            Container(
-              child: state is LoadingUser ? LoadingIndicator() : null,
-            ),
-            Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: RaisedButton(
-                  onPressed: () => state is UserLoaded
-                      ? Navigator.of(context)
-                          .pushNamed(EditPage.route, arguments: state.user)
-                      : null,
-                  child: Text('Edit'),
-                )),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                state is UserLoaded ? state.user.name : "first name",
-                style: TextStyle(fontSize: 18),
+              Switch(
+                value: _isNotificationOn,
+                onChanged: (value) {
+                  setState(() {
+                    _isNotificationOn = value;
+                  });
+                },
               ),
-            ),
-            Divider(height: 1.0, color: Colors.blue),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                state is UserLoaded ? state.user.familyName : "last name",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Divider(height: 1.0, color: Colors.blue),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Notifications',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Switch(
-                    value: _isNotificationOn,
-                    onChanged: (value) {
-                      setState(() {
-                        _isNotificationOn = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Divider(height: 1.0, color: Colors.blue),
-            Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: RaisedButton(
-                  onPressed: _onSignOutPressed,
-                  child: Text('Sign out'),
-                )),
-          ],
-        )));
+            ],
+          ),
+        ),
+        Divider(height: 1.0, color: Colors.blue),
+        Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: RaisedButton(
+              onPressed: _onSignOutPressed,
+              child: Text('Sign out'),
+            )),
+      ],
+    ));
   }
 
   void _onSignOutPressed() {

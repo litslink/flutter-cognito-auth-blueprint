@@ -10,15 +10,6 @@ abstract class EditState extends Equatable {
   List<Object> get props => null;
 }
 
-class UserLoaded extends EditState {
-  final User user;
-
-  const UserLoaded({@required this.user});
-
-  @override
-  List<Object> get props => [user];
-}
-
 class EditRequired extends EditState {
   final User user;
   final bool isFirstNameValid;
@@ -28,8 +19,6 @@ class EditRequired extends EditState {
 }
 
 class Loading extends EditState {}
-
-class FieldChanged extends EditState {}
 
 class Edited extends EditState {}
 

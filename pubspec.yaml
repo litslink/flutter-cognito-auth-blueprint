@@ -18,7 +18,7 @@ environment:
 
 dependencies:
   google_sign_in: ^4.1.4
-  amazon_s3_cognito: '^0.2.0'
+  amazon_s3_cognito: ^0.2.4
   flutter_cognito_plugin: ^1.1.0
   equatable: ^1.1.1
   bloc: ^3.0.0
