@@ -21,4 +21,16 @@ class LoadUser extends ProfileEvent {
   String toString() => 'loading user';
 }
 
+class SetNotificationStatus extends ProfileEvent {
+  final bool isOn;
+
+  const SetNotificationStatus({this.isOn});
+
+  @override
+  List<Object> get props => [isOn];
+
+  @override
+  String toString() => 'setting notification status';
+}
+
 class SignOutUser extends ProfileEvent {}

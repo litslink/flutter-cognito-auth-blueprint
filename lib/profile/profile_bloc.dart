@@ -21,6 +21,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield UserLoaded(user: user);
       }
     }
+    if (event is SetNotificationStatus) {
+      final attrs = {
+        'custom:notification': event.isOn ? "on" : "off",
+      };
+      await _userRepository.updateUserInfo(userAttributes: attrs);
+    }
     if (event is SignOutUser) {
       await _authenticationRepository.signOut();
       yield SignedOut();

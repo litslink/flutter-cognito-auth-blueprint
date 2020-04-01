@@ -31,6 +31,10 @@ class _ProfilePageState extends State<ProfilePage> {
         body: BlocListener<ProfileBloc, ProfileState>(
           bloc: _profileBloc,
           listener: (context, state) {
+            if (state is UserLoaded) {
+              _isNotificationOn =
+                  state.user.notification == "on" ? true : false;
+            }
             if (state is UserLoadingFailure) {
               Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text('Oops...something went wrong'),
@@ -108,6 +112,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 onChanged: (value) {
                   setState(() {
                     _isNotificationOn = value;
+                    _profileBloc
+                        .add(SetNotificationStatus(isOn: _isNotificationOn));
                   });
                 },
               ),

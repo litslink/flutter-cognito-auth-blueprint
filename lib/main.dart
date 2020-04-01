@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterapp/auth/password_reset/password_reset_page.dart';
 import 'package:provider/provider.dart';
+import 'auth/password_reset/password_reset_page.dart';
+import 'auth/sign_in/sign_in_page.dart';
+import 'auth/sign_up/sign_up_page.dart';
 import 'base.dart';
 import 'profile/edit/edit_page.dart';
 import 'provider.dart';
-import 'auth/sign_in/sign_in_page.dart';
-import 'auth/sign_up/sign_up_page.dart';
 import 'splash/splash_page.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
@@ -48,7 +48,7 @@ class CognitoApp extends StatelessWidget {
             PasswordResetPage.route: (context) => PasswordResetPage(),
             SignUpPage.route: (context) => SignUpPage(),
             BasePage.route: (context) => BasePage(),
-            EditPage.route: (context) => EditPage()
+            EditPage.route: (context) => EditPage(),
           },
         ));
   }

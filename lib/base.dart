@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'home/home_page.dart';
-import 'notes/notes_page.dart';
 import 'notifications/notification_page.dart';
 import 'profile/profile_page.dart';
 
@@ -45,8 +44,8 @@ class _BasePageState extends State<BasePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
+            icon: Icon(Icons.note),
+            title: Text('Notes'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
