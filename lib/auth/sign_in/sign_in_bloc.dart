@@ -29,7 +29,7 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
       try {
         if (_email.state is FieldValid && _password.state is FieldValid) {
           user = await _authenticationRepository.signIn(
-              email: (_email.state as FieldValid).text,
+              username: (_email.state as FieldValid).text,
               password: (_password.state as FieldValid).text);
         }
         if (user != null && user.signInState == SignInState.DONE) {
@@ -62,8 +62,15 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
       yield SignInWithFacebook();
       await _authenticationRepository.signInWithFacebook();
     }
-    if (event is SignUpButtonPressed) {
-      yield SignInMovingToSignUp();
+    if (event is SignInWithPhonePressed) {
+      yield SignInMovingToPhonePage();
+    }
+    if (event is SignUpWithEmailPressed) {
+      yield SignInMovingToEmailSignUp();
+    }
+
+    if (event is SignUpWithPhonePressed) {
+      yield SignInMovingToPhoneSignUp();
     }
     if (event is ResetButtonPressed) {
       yield ResetPassword();

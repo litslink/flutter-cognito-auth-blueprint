@@ -29,7 +29,7 @@ class ConfirmationCodeValidator implements Validator {
   bool validate(String input) => _confirmationCodeRegExp.hasMatch(input);
 }
 
-class NameValidator implements Validator {
+class NonEmptyValidator implements Validator {
   @override
   bool validate(String input) => input.isNotEmpty;
 }

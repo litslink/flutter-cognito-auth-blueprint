@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-abstract class SignUpEvent extends Equatable {
-  const SignUpEvent();
+abstract class PhoneSignUpEvent extends Equatable {
+  const PhoneSignUpEvent();
 }
 
-class SignUpButtonPressed extends SignUpEvent {
+class SignUpButtonPressed extends PhoneSignUpEvent {
   @override
   List<Object> get props => [null];
 
   @override
-  String toString() => 'SignUp button pressed';
+  String toString() => 'PhoneSignUn button pressed';
 }
 
-class SignInButtonPressed extends SignUpEvent {
+class SignInButtonPressed extends PhoneSignUpEvent {
   @override
   List<Object> get props => null;
 
@@ -20,27 +20,27 @@ class SignInButtonPressed extends SignUpEvent {
   String toString() => 'going to SignIn page';
 }
 
-class ConfirmSignUpPressed extends SignUpEvent {
+class ConfirmSignUpPressed extends PhoneSignUpEvent {
   @override
   List<Object> get props => null;
 
   @override
-  String toString() => 'confirming sign up';
+  String toString() => 'confirming phone sign up';
 }
 
-class EmailChanged extends SignUpEvent {
-  final String email;
+class PhoneChanged extends PhoneSignUpEvent {
+  final String phone;
 
-  EmailChanged(this.email);
+  PhoneChanged(this.phone);
 
   @override
   List<Object> get props => null;
 
   @override
-  String toString() => 'email changed';
+  String toString() => 'phone changed';
 }
 
-class PasswordChanged extends SignUpEvent {
+class PasswordChanged extends PhoneSignUpEvent {
   final String password;
 
   PasswordChanged(this.password);
@@ -52,7 +52,7 @@ class PasswordChanged extends SignUpEvent {
   String toString() => 'password changed';
 }
 
-class ConfirmationCodeChanged extends SignUpEvent {
+class ConfirmationCodeChanged extends PhoneSignUpEvent {
   final String code;
 
   ConfirmationCodeChanged(this.code);

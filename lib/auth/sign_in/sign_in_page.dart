@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterapp/auth/sign_in/phone/phone_page.dart';
+import 'package:flutterapp/auth/sign_up/phone/phone_page.dart';
 import 'package:provider/provider.dart';
 import '../../base.dart';
 import '../../data/repository/authentication_repository.dart';
@@ -38,8 +40,12 @@ class SignInPageState extends State<SignInPage> {
             child: BlocListener<SignInBloc, LoginState>(
               bloc: _signInBloc,
               listener: (context, state) {
-                if (state is SignInMovingToSignUp) {
+                if (state is SignInMovingToPhonePage) {
+                  Navigator.of(context).pushNamed(PhoneSignInPage.route);
+                } else if (state is SignInMovingToEmailSignUp) {
                   Navigator.of(context).pushNamed(SignUpPage.route);
+                } else if (state is SignInMovingToPhoneSignUp) {
+                  Navigator.of(context).pushNamed(PhoneSignUpPage.route);
                 } else if (state is SignInSuccess) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       BasePage.route, (route) => false);
@@ -95,16 +101,12 @@ class SignInPageState extends State<SignInPage> {
       Container(
         child: state is SignInLoading ? LoadingIndicator() : null,
       ),
-      FlatButton(
-          onPressed: () => _signInBloc.add(
-                SignUpButtonPressed(),
-              ),
-          child: Text('Sign up')),
+      FlatButton(onPressed: _buildSignUpTypeDialog, child: Text('Sign up')),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           GestureDetector(
-            onTap: null,
+            onTap: () => _signInBloc.add(SignInWithPhonePressed()),
             child: Padding(
               padding: EdgeInsets.all(10.0),
               child: SizedBox(
@@ -150,5 +152,30 @@ class SignInPageState extends State<SignInPage> {
             style: TextStyle(fontSize: 16, color: Colors.blueAccent)),
       ),
     ]);
+  }
+
+  Future<void> _buildSignUpTypeDialog() async {
+    await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Select the way to sign up"),
+              content: Text("What do you want to use as username?"),
+              actions: <Widget>[
+                MaterialButton(
+                  child: Text("Email"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _signInBloc.add(SignUpWithEmailPressed());
+                  },
+                ),
+                MaterialButton(
+                  child: Text("Phone"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _signInBloc.add(SignUpWithPhonePressed());
+                  },
+                )
+              ],
+            ));
   }
 }

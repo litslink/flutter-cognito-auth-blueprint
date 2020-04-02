@@ -16,8 +16,8 @@ class AuthenticationRepository {
   }
 
   Future<SignInResult> signIn(
-      {@required String email, @required String password}) async {
-    return await Cognito.signIn(email, password);
+      {@required String username, @required String password}) async {
+    return await Cognito.signIn(username, password);
   }
 
   Future<UserState> signInWithGoogle() async {
@@ -29,9 +29,8 @@ class AuthenticationRepository {
   Future<void> signInWithFacebook() async {}
 
   Future<SignUpResult> signUp(
-      {@required String email, @required String password}) async {
-    final attrs = {'email': '$email'};
-    return await Cognito.signUp(email, password, attrs);
+      {@required String username, @required String password}) async {
+    return await Cognito.signUp(username, password);
   }
 
   Future<SignUpResult> confirmSignUp(

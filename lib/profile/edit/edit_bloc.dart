@@ -12,8 +12,8 @@ class EditBloc extends Bloc<EditEvent, EditState> {
 
   EditBloc(this._userRepository);
 
-  final _firstName = ValidationBloc(NameValidator());
-  final _lastName = ValidationBloc(NameValidator());
+  final _firstName = ValidationBloc(NonEmptyValidator());
+  final _lastName = ValidationBloc(NonEmptyValidator());
 
   @override
   EditState get initialState =>

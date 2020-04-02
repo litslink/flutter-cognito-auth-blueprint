@@ -12,12 +12,20 @@ class SignInButtonPressed extends SignInEvent {
   String toString() => 'SignIn button pressed';
 }
 
-class SignUpButtonPressed extends SignInEvent {
+class SignUpWithEmailPressed extends SignInEvent {
   @override
   List<Object> get props => null;
 
   @override
-  String toString() => 'going to SignUp page';
+  String toString() => 'going to SignUp with email page';
+}
+
+class SignUpWithPhonePressed extends SignInEvent {
+  @override
+  List<Object> get props => null;
+
+  @override
+  String toString() => 'going to SignUp with phone page';
 }
 
 class ResetButtonPressed extends SignInEvent {
@@ -31,6 +39,14 @@ class SignInWithGooglePressed extends SignInEvent {
 
   @override
   String toString() => 'signing in with google';
+}
+
+class SignInWithPhonePressed extends SignInEvent {
+  @override
+  List<Object> get props => null;
+
+  @override
+  String toString() => 'signing in with phone';
 }
 
 class SignInWithFacebookPressed extends SignInEvent {

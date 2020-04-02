@@ -32,7 +32,11 @@ class SignInFailure extends LoginState {
 
 class SignInSuccess extends LoginState {}
 
-class SignInMovingToSignUp extends LoginState {}
+class SignInMovingToEmailSignUp extends LoginState {}
+
+class SignInMovingToPhoneSignUp extends LoginState {}
+
+class SignInMovingToPhonePage extends LoginState {}
 
 class SignInWithGoogle extends LoginState {}
 
