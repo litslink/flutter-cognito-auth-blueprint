@@ -68,7 +68,6 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
     if (event is SignUpWithEmailPressed) {
       yield SignInMovingToEmailSignUp();
     }
-
     if (event is SignUpWithPhonePressed) {
       yield SignInMovingToPhoneSignUp();
     }
@@ -88,9 +87,9 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
   }
 
   @override
-  Future<Function> close() {
-    super.close();
+  Future<void> close() {
     _email.close();
     _password.close();
+    return super.close();
   }
 }

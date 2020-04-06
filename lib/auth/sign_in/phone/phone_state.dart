@@ -31,4 +31,3 @@ class SignInFailure extends PhoneSignInState {
 }
 
 class SignInSuccess extends PhoneSignInState {}
-

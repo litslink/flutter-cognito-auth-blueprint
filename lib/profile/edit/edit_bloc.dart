@@ -65,9 +65,9 @@ class EditBloc extends Bloc<EditEvent, EditState> {
   }
 
   @override
-  Future<Function> close() {
-    super.close();
+  Future<void> close() {
     _firstName.close();
     _lastName.close();
+    return super.close();
   }
 }

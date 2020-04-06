@@ -89,10 +89,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   }
 
   @override
-  Future<Function> close() {
-    super.close();
+  Future<void> close() {
     _email.close();
     _password.close();
     _code.close();
+    return super.close();
   }
 }

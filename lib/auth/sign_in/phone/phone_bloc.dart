@@ -58,10 +58,10 @@ class PhoneSignInBloc extends Bloc<PhoneSignInEvent, PhoneSignInState> {
   }
 
   @override
-  Future<Function> close() {
-    super.close();
+  Future<void> close() {
     _phone.close();
     _password.close();
     _code.close();
+    return super.close();
   }
 }
