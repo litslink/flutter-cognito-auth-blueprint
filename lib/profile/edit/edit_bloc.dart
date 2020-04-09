@@ -1,4 +1,3 @@
-import 'package:amazon_s3_cognito/amazon_s3_cognito.dart';
 import 'package:bloc/bloc.dart';
 import '../../data/repository/user_repository.dart';
 import '../../validation/validation_bloc.dart';

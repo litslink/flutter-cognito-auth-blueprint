@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterapp/auth/sign_in/sign_in_page.dart';
-import 'package:flutterapp/data/repository/authentication_repository.dart';
-import 'package:flutterapp/widgets/loading_indicator.dart';
 import 'package:provider/provider.dart';
+import '../../../data/repository/authentication_repository.dart';
+import '../../../widgets/loading_indicator.dart';
+import '../../sign_in/sign_in_page.dart';
 import 'phone_bloc.dart';
 import 'phone_event.dart';
 import 'phone_state.dart';

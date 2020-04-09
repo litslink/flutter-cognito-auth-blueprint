@@ -21,6 +21,7 @@
 #.vscode/
 
 # Flutter/Dart/Pub related
+*.lock
 **/doc/api/
 .dart_tool/
 .flutter-plugins
@@ -35,6 +36,10 @@ lib/generated_plugin_registrant.dart
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+# Credentials
+ios/Runner/GoogleService-Info.plist
+android/app/google-services.json
 
 #amplify
 amplify/\#current-cloud-backend

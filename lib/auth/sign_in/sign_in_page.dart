@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterapp/auth/sign_in/phone/phone_page.dart';
-import 'package:flutterapp/auth/sign_up/phone/phone_page.dart';
 import 'package:provider/provider.dart';
 import '../../base.dart';
 import '../../data/repository/authentication_repository.dart';
 import '../../widgets/loading_indicator.dart';
 import '../password_reset/password_reset_page.dart';
+import '../sign_up/phone/phone_page.dart';
 import '../sign_up/sign_up_page.dart';
+import 'phone/phone_page.dart';
 import 'sign_in_bloc.dart';
 import 'sign_in_event.dart';
 import 'sign_in_state.dart';
