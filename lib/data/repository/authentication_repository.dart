@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cognito_plugin/flutter_cognito_plugin.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthenticationRepository {
@@ -26,7 +27,11 @@ class AuthenticationRepository {
     return await Cognito.federatedSignIn("accounts.google.com", auth.idToken);
   }
 
-  Future<void> signInWithFacebook() async {}
+  Future<UserState> signInWithFacebook() async {
+    final facebookLogin = FacebookLogin();
+    final result = await facebookLogin.logIn(['email']);
+    return await Cognito.federatedSignIn("facebook", result.accessToken.token);
+  }
 
   Future<SignUpResult> signUp(
       {@required String username, @required String password}) async {

@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  flutter_facebook_login: ^3.0.0
   google_sign_in: ^4.1.4
   amazon_s3_cognito: ^0.2.4
   flutter_cognito_plugin: ^1.1.0
