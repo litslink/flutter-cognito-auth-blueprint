@@ -14,14 +14,16 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
   @override
   Stream<SplashState> mapEventToState(SplashEvent event) async* {
-    if (event is CheckAuthentication) {
-      await _authenticationRepository.initCognito();
-      final status = await _authenticationRepository.getUserStatus();
-      if (status == UserState.SIGNED_IN) {
-        yield Authenticated();
-      } else {
-        yield AuthenticationRequired();
-      }
+    switch (event.runtimeType) {
+      case CheckAuthentication:
+        await _authenticationRepository.initCognito();
+        final status = await _authenticationRepository.getUserStatus();
+        if (status == UserState.SIGNED_IN) {
+          yield Authenticated();
+        } else {
+          yield AuthenticationRequired();
+        }
+        break;
     }
   }
 }

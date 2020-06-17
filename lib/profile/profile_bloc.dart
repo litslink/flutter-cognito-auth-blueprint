@@ -15,21 +15,24 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
-    if (event is LoadUser) {
-      final user = await _userRepository.getUserInfo();
-      if (user != null) {
-        yield UserLoaded(user: user);
-      }
-    }
-    if (event is SetNotificationStatus) {
-      final attrs = {
-        'custom:notification': event.isOn ? "on" : "off",
-      };
-      await _userRepository.updateUserInfo(userAttributes: attrs);
-    }
-    if (event is SignOutUser) {
-      await _authenticationRepository.signOut();
-      yield SignedOut();
+    switch (event.runtimeType) {
+      case LoadUser:
+        final user = await _userRepository.getUserInfo();
+        if (user != null) {
+          yield UserLoaded(user: user);
+        }
+        break;
+      case SetNotificationStatus:
+        final isOn = (event as SetNotificationStatus).isOn;
+        final attrs = {
+          'custom:notification': isOn ? "on" : "off",
+        };
+        await _userRepository.updateUserInfo(userAttributes: attrs);
+        break;
+      case SignOutUser:
+        await _authenticationRepository.signOut();
+        yield SignedOut();
+        break;
     }
   }
 }
