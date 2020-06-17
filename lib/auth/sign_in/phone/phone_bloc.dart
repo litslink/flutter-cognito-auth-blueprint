@@ -24,36 +24,40 @@ class PhoneSignInBloc extends Bloc<PhoneSignInEvent, PhoneSignInState> {
   Stream<PhoneSignInState> mapEventToState(
     PhoneSignInEvent event,
   ) async* {
-    if (event is SignInButtonPressed) {
-      yield SignInLoading();
-      SignInResult user;
-      try {
-        if (_phone.state is FieldValid && _password.state is FieldValid) {
-          user = await _authenticationRepository.signIn(
-              username: (_phone.state as FieldValid).text,
-              password: (_password.state as FieldValid).text);
+    switch (event.runtimeType) {
+      case SignInButtonPressed:
+        yield SignInLoading();
+        SignInResult user;
+        try {
+          if (_phone.state is FieldValid && _password.state is FieldValid) {
+            user = await _authenticationRepository.signIn(
+                username: (_phone.state as FieldValid).text,
+                password: (_password.state as FieldValid).text);
+          }
+          if (user != null && user.signInState == SignInState.DONE) {
+            yield SignInSuccess();
+          } else {
+            yield SignInRequired(
+                isPhoneValid: _phone.state is FieldValid,
+                isPasswordValid: _password.state is FieldValid);
+          }
+        } on Exception catch (error) {
+          yield SignInFailure(error: error.toString());
+          yield SignInRequired(isPhoneValid: true, isPasswordValid: true);
         }
-        if (user != null && user.signInState == SignInState.DONE) {
-          yield SignInSuccess();
-        } else {
-          yield SignInRequired(
-              isPhoneValid: _phone.state is FieldValid,
-              isPasswordValid: _password.state is FieldValid);
-        }
-      } on Exception catch (error) {
-        yield SignInFailure(error: error.toString());
+        break;
+      case PhoneChanged:
+        yield FieldChanged();
+        final phone = (event as PhoneChanged).phone;
+        _phone.add(phone);
         yield SignInRequired(isPhoneValid: true, isPasswordValid: true);
-      }
-    }
-    if (event is PhoneChanged) {
-      yield FieldChanged();
-      _phone.add(event.phone);
-      yield SignInRequired(isPhoneValid: true, isPasswordValid: true);
-    }
-    if (event is PasswordChanged) {
-      yield FieldChanged();
-      _password.add(event.password);
-      yield SignInRequired(isPhoneValid: true, isPasswordValid: true);
+        break;
+      case PasswordChanged:
+        yield FieldChanged();
+        final password = (event as PasswordChanged).password;
+        _password.add(password);
+        yield SignInRequired(isPhoneValid: true, isPasswordValid: true);
+        break;
     }
   }
 

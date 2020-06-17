@@ -22,54 +22,59 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
   Stream<PasswordResetState> mapEventToState(
     PasswordResetEvent event,
   ) async* {
-    if (event is GetConfirmationCodePressed) {
-      yield GettingConfirmationCode();
-      try {
-        if (_email.state is FieldValid) {
-          await _authenticationRepository.resetPassword(
-              username: (_email.state as FieldValid).text);
+    switch (event.runtimeType) {
+      case GetConfirmationCodePressed:
+        yield GettingConfirmationCode();
+        try {
+          if (_email.state is FieldValid) {
+            await _authenticationRepository.resetPassword(
+                username: (_email.state as FieldValid).text);
+            yield ConfirmReset(isPasswordValid: true, isCodeValid: true);
+          } else {
+            yield ResetRequired(isEmailValid: _email.state is FieldValid);
+          }
+        } on Exception catch (error) {
+          yield ResetFailure(error: error.toString());
+          yield ResetRequired(isEmailValid: true);
+        }
+        break;
+      case ConfirmResetButtonPressed:
+        yield ResetLoading();
+        try {
+          if (_password.state is FieldValid && _code.state is FieldValid) {
+            await _authenticationRepository.confirmPasswordReset(
+                username: (_email.state as FieldValid).text,
+                newPassword: (_password.state as FieldValid).text,
+                confirmationCode: (_code.state as FieldValid).text);
+            yield ResetSuccess();
+          } else {
+            yield ConfirmReset(
+                isPasswordValid: _password.state is FieldValid,
+                isCodeValid: _code.state is FieldValid);
+          }
+        } on Exception catch (error) {
+          yield ResetFailure(error: error.toString());
           yield ConfirmReset(isPasswordValid: true, isCodeValid: true);
-        } else {
-          yield ResetRequired(isEmailValid: _email.state is FieldValid);
         }
-      } on Exception catch (error) {
-        yield ResetFailure(error: error.toString());
+        break;
+      case EmailChanged:
+        yield FieldChanged();
+        final email = (event as EmailChanged).email;
+        _email.add(email);
         yield ResetRequired(isEmailValid: true);
-      }
-    }
-    if (event is ConfirmResetButtonPressed) {
-      yield ResetLoading();
-      try {
-        if (_password.state is FieldValid && _code.state is FieldValid) {
-          await _authenticationRepository.confirmPasswordReset(
-              username: (_email.state as FieldValid).text,
-              newPassword: (_password.state as FieldValid).text,
-              confirmationCode: (_code.state as FieldValid).text);
-          yield ResetSuccess();
-        } else {
-          yield ConfirmReset(
-              isPasswordValid: _password.state is FieldValid,
-              isCodeValid: _code.state is FieldValid);
-        }
-      } on Exception catch (error) {
-        yield ResetFailure(error: error.toString());
+        break;
+      case PasswordChanged:
+        yield FieldChanged();
+        final password = (event as PasswordChanged).password;
+        _password.add(password);
         yield ConfirmReset(isPasswordValid: true, isCodeValid: true);
-      }
-    }
-    if (event is EmailChanged) {
-      yield FieldChanged();
-      _email.add(event.email);
-      yield ResetRequired(isEmailValid: true);
-    }
-    if (event is PasswordChanged) {
-      yield FieldChanged();
-      _password.add(event.password);
-      yield ConfirmReset(isPasswordValid: true, isCodeValid: true);
-    }
-    if (event is ConfirmationCodeChanged) {
-      yield FieldChanged();
-      _code.add(event.code);
-      yield ConfirmReset(isPasswordValid: true, isCodeValid: true);
+        break;
+      case ConfirmationCodeChanged:
+        yield FieldChanged();
+        final code = (event as ConfirmationCodeChanged).code;
+        _code.add(code);
+        yield ConfirmReset(isPasswordValid: true, isCodeValid: true);
+        break;
     }
   }
 

@@ -24,67 +24,72 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   Stream<SignUpState> mapEventToState(
     SignUpEvent event,
   ) async* {
-    if (event is SignUpButtonPressed) {
-      yield SignUpLoading();
-      SignUpResult res;
-      try {
-        if (_email.state is FieldValid && _password.state is FieldValid) {
-          res = await _authenticationRepository.signUp(
-              username: (_email.state as FieldValid).text,
-              password: (_password.state as FieldValid).text);
+    switch (event.runtimeType) {
+      case SignUpButtonPressed:
+        yield SignUpLoading();
+        SignUpResult res;
+        try {
+          if (_email.state is FieldValid && _password.state is FieldValid) {
+            res = await _authenticationRepository.signUp(
+                username: (_email.state as FieldValid).text,
+                password: (_password.state as FieldValid).text);
+          }
+          if (res != null && res.confirmationState) {
+            yield SignUpSuccess();
+          } else if (res != null && !res.confirmationState) {
+            yield SignUpConfirmation(isCodeValid: true);
+          } else {
+            yield SignUpRequired(
+                isEmailValid: _email.state is FieldValid,
+                isPasswordValid: _password.state is FieldValid);
+          }
+        } on Exception catch (error) {
+          yield SignUpFailure(error: error.toString());
+          yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
         }
-        if (res != null && res.confirmationState) {
-          yield SignUpSuccess();
-        } else if (res != null && !res.confirmationState) {
-          yield SignUpConfirmation(isCodeValid: true);
-        } else {
-          yield SignUpRequired(
-              isEmailValid: _email.state is FieldValid,
-              isPasswordValid: _password.state is FieldValid);
+        break;
+      case ConfirmSignUpPressed:
+        yield ConfirmationLoading();
+        SignUpResult res;
+        try {
+          if (_code.state is FieldValid) {
+            res = await _authenticationRepository.confirmSignUp(
+                username: (_email.state as FieldValid).text,
+                code: (_code.state as FieldValid).text);
+          }
+          if (res != null && res.confirmationState) {
+            yield SignUpSuccess();
+          } else if (res != null && !res.confirmationState) {
+            yield SignUpConfirmation(isCodeValid: true);
+          } else {
+            yield SignUpConfirmation(isCodeValid: _code.state is FieldValid);
+          }
+        } on Exception catch (error) {
+          yield SignUpFailure(error: error.toString());
+          yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
         }
-      } on Exception catch (error) {
-        yield SignUpFailure(error: error.toString());
+        break;
+      case SignInButtonPressed:
+        yield SignUpMovingToSignIn();
+        break;
+      case EmailChanged:
+        yield FieldChanged();
+        final email = (event as EmailChanged).email;
+        _email.add(email);
         yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
-      }
-    }
-    if (event is ConfirmSignUpPressed) {
-      yield ConfirmationLoading();
-      SignUpResult res;
-      try {
-        if (_code.state is FieldValid) {
-          res = await _authenticationRepository.confirmSignUp(
-              username: (_email.state as FieldValid).text,
-              code: (_code.state as FieldValid).text);
-        }
-        if (res != null && res.confirmationState) {
-          yield SignUpSuccess();
-        } else if (res != null && !res.confirmationState) {
-          yield SignUpConfirmation(isCodeValid: true);
-        } else {
-          yield SignUpConfirmation(isCodeValid: _code.state is FieldValid);
-        }
-      } on Exception catch (error) {
-        yield SignUpFailure(error: error.toString());
+        break;
+      case PasswordChanged:
+        yield FieldChanged();
+        final password = (event as PasswordChanged).password;
+        _password.add(password);
         yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
-      }
-    }
-    if (event is SignInButtonPressed) {
-      yield SignUpMovingToSignIn();
-    }
-    if (event is EmailChanged) {
-      yield FieldChanged();
-      _email.add(event.email);
-      yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
-    }
-    if (event is PasswordChanged) {
-      yield FieldChanged();
-      _password.add(event.password);
-      yield SignUpRequired(isEmailValid: true, isPasswordValid: true);
-    }
-    if (event is ConfirmationCodeChanged) {
-      yield FieldChanged();
-      _code.add(event.code);
-      yield SignUpConfirmation(isCodeValid: true);
+        break;
+      case ConfirmationCodeChanged:
+        yield FieldChanged();
+        final code = (event as ConfirmationCodeChanged).code;
+        _code.add(code);
+        yield SignUpConfirmation(isCodeValid: true);
+        break;
     }
   }
 

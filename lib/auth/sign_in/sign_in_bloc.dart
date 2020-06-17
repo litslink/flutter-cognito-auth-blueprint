@@ -23,76 +23,81 @@ class SignInBloc extends Bloc<SignInEvent, LoginState> {
   Stream<LoginState> mapEventToState(
     SignInEvent event,
   ) async* {
-    if (event is SignInButtonPressed) {
-      yield SignInLoading();
-      SignInResult user;
-      try {
-        if (_email.state is FieldValid && _password.state is FieldValid) {
-          user = await _authenticationRepository.signIn(
-              username: (_email.state as FieldValid).text,
-              password: (_password.state as FieldValid).text);
-        }
-        if (user != null && user.signInState == SignInState.DONE) {
-          yield SignInSuccess();
-        } else {
-          yield SignInRequired(
-              isEmailValid: _email.state is FieldValid,
-              isPasswordValid: _password.state is FieldValid);
-        }
-      } on Exception catch (error) {
-        yield SignInFailure(error: error.toString());
-        yield SignInRequired(isEmailValid: true, isPasswordValid: true);
-      }
-    }
-    if (event is SignInWithGooglePressed) {
-      yield SignInWithGoogle();
-      try {
-        final userState = await _authenticationRepository.signInWithGoogle();
-        if (userState != null && userState == UserState.SIGNED_IN) {
-          yield SignInSuccess();
-        } else {
+    switch (event.runtimeType) {
+      case SignInButtonPressed:
+        yield SignInLoading();
+        SignInResult user;
+        try {
+          if (_email.state is FieldValid && _password.state is FieldValid) {
+            user = await _authenticationRepository.signIn(
+                username: (_email.state as FieldValid).text,
+                password: (_password.state as FieldValid).text);
+          }
+          if (user != null && user.signInState == SignInState.DONE) {
+            yield SignInSuccess();
+          } else {
+            yield SignInRequired(
+                isEmailValid: _email.state is FieldValid,
+                isPasswordValid: _password.state is FieldValid);
+          }
+        } on Exception catch (error) {
+          yield SignInFailure(error: error.toString());
           yield SignInRequired(isEmailValid: true, isPasswordValid: true);
         }
-      } on Exception catch (error) {
-        yield SignInFailure(error: error.toString());
-        yield SignInRequired(isEmailValid: true, isPasswordValid: true);
-      }
-    }
-    if (event is SignInWithFacebookPressed) {
-      yield SignInWithFacebook();
-      try {
-        final userState = await _authenticationRepository.signInWithFacebook();
-        if (userState != null && userState == UserState.SIGNED_IN) {
-          yield SignInSuccess();
-        } else {
+        break;
+      case SignInWithGooglePressed:
+        yield SignInWithGoogle();
+        try {
+          final userState = await _authenticationRepository.signInWithGoogle();
+          if (userState != null && userState == UserState.SIGNED_IN) {
+            yield SignInSuccess();
+          } else {
+            yield SignInRequired(isEmailValid: true, isPasswordValid: true);
+          }
+        } on Exception catch (error) {
+          yield SignInFailure(error: error.toString());
           yield SignInRequired(isEmailValid: true, isPasswordValid: true);
         }
-      } on Exception catch (error) {
-        yield SignInFailure(error: error.toString());
+        break;
+      case SignInWithFacebookPressed:
+        yield SignInWithFacebook();
+        try {
+          final userState =
+              await _authenticationRepository.signInWithFacebook();
+          if (userState != null && userState == UserState.SIGNED_IN) {
+            yield SignInSuccess();
+          } else {
+            yield SignInRequired(isEmailValid: true, isPasswordValid: true);
+          }
+        } on Exception catch (error) {
+          yield SignInFailure(error: error.toString());
+          yield SignInRequired(isEmailValid: true, isPasswordValid: true);
+        }
+        break;
+      case SignInWithPhonePressed:
+        yield SignInMovingToPhonePage();
+        break;
+      case SignUpWithEmailPressed:
+        yield SignInMovingToEmailSignUp();
+        break;
+      case SignUpWithPhonePressed:
+        yield SignInMovingToPhoneSignUp();
+        break;
+      case ResetButtonPressed:
+        yield ResetPassword();
+        break;
+      case EmailChanged:
+        yield FieldChanged();
+        final email = (event as EmailChanged).email;
+        _email.add(email);
         yield SignInRequired(isEmailValid: true, isPasswordValid: true);
-      }
-    }
-    if (event is SignInWithPhonePressed) {
-      yield SignInMovingToPhonePage();
-    }
-    if (event is SignUpWithEmailPressed) {
-      yield SignInMovingToEmailSignUp();
-    }
-    if (event is SignUpWithPhonePressed) {
-      yield SignInMovingToPhoneSignUp();
-    }
-    if (event is ResetButtonPressed) {
-      yield ResetPassword();
-    }
-    if (event is EmailChanged) {
-      yield FieldChanged();
-      _email.add(event.email);
-      yield SignInRequired(isEmailValid: true, isPasswordValid: true);
-    }
-    if (event is PasswordChanged) {
-      yield FieldChanged();
-      _password.add(event.password);
-      yield SignInRequired(isEmailValid: true, isPasswordValid: true);
+        break;
+      case PasswordChanged:
+        yield FieldChanged();
+        final password = (event as PasswordChanged).password;
+        _password.add(password);
+        yield SignInRequired(isEmailValid: true, isPasswordValid: true);
+        break;
     }
   }
 
